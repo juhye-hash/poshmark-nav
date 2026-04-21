@@ -208,10 +208,11 @@ button{cursor:pointer;font-family:inherit}
 .subcat-ring{position:absolute;top:0;left:0;width:104px;height:104px;border:1.1px solid #121212;border-radius:50%;opacity:0;transition:opacity 0.15s;pointer-events:none}
 .subcat-item.active .subcat-ring{opacity:1}
 .subcat-label{position:absolute;top:108px;left:50%;transform:translateX(-50%);width:96px;font-size:13px;line-height:18px;color:#121212;text-align:center}
-.subcat-btn-next,.subcat-btn-prev{position:absolute;top:34px;width:32px;height:32px;background:#fff;border:1px solid #e3e3e3;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.17);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.subcat-btn-next,.subcat-btn-prev{position:absolute;top:34px;width:32px;height:32px;background:#fff;border:1px solid #e3e3e3;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.17);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .15s}
 .subcat-btn-next{right:-20px}
-.subcat-btn-prev{left:-20px;opacity:0;pointer-events:none;transition:opacity .15s}
-.subcat-btn-prev.visible{opacity:1;pointer-events:auto}
+.subcat-btn-prev{left:-20px}
+.subcat-wrap:hover .subcat-btn-next.active{opacity:1;pointer-events:auto}
+.subcat-wrap:hover .subcat-btn-prev.visible{opacity:1;pointer-events:auto}
 
 /* ===================== CATEGORY CAROUSEL ===================== */
 .cat-carousel-wrap{position:relative;margin-bottom:38px;overflow:hidden}
@@ -1221,8 +1222,7 @@ function renderSubcat(variantId, cat, selectedSub){
   if(wrap){
     const nextBtn = wrap.querySelector('.subcat-btn-next');
     const prevBtn = wrap.querySelector('.subcat-btn-prev');
-    if(nextBtn) nextBtn.style.display = subs.length > visible ? 'flex' : 'none';
-    if(nextBtn) nextBtn.style.opacity = scrollPos >= Math.max(0, subs.length - visible) ? '0.25' : '1';
+    if(nextBtn) nextBtn.classList.toggle('active', subs.length > visible && scrollPos < Math.max(0, subs.length - visible));
     if(prevBtn) prevBtn.classList.toggle('visible', scrollPos > 0);
   }
 }
@@ -1295,7 +1295,7 @@ function subcatNext(variantId){
   const wrap = document.getElementById(variantId + '-subcat');
   if(wrap){
     wrap.querySelector('.subcat-btn-prev')?.classList.toggle('visible', next > 0);
-    wrap.querySelector('.subcat-btn-next').style.opacity = next >= max ? '0.25' : '1';
+    wrap.querySelector('.subcat-btn-next')?.classList.toggle('active', next < max);
   }
 }
 
@@ -1311,7 +1311,7 @@ function subcatPrev(variantId){
   const wrap = document.getElementById(variantId + '-subcat');
   if(wrap){
     wrap.querySelector('.subcat-btn-prev')?.classList.toggle('visible', prev > 0);
-    wrap.querySelector('.subcat-btn-next').style.opacity = '1';
+    wrap.querySelector('.subcat-btn-next')?.classList.add('active');
   }
 }
 
