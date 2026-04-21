@@ -1161,15 +1161,16 @@ function subcatSelect(btn, variantId){
   const subLabel = btn.querySelector('.subcat-label').textContent.trim();
   panelState.selectedSubLabel = subLabel;
 
+  const dept    = CAT_TREE.find(d => d.id === panelState.selectedDeptId);
+  const cat     = dept && dept.cats.find(c => c.id === panelState.selectedCatId);
+  const deptLbl = dept ? dept.label : '';
+  const catLbl  = cat  ? cat.label  : '';
+
   // Update breadcrumb
   const variantEl = document.getElementById(variantId);
   if(variantEl){
     const bc = variantEl.querySelector('.breadcrumb');
     if(bc){
-      const dept    = CAT_TREE.find(d => d.id === panelState.selectedDeptId);
-      const cat     = dept && dept.cats.find(c => c.id === panelState.selectedCatId);
-      const deptLbl = dept ? dept.label : '';
-      const catLbl  = cat  ? cat.label  : '';
       let html = `<a href="#">Home</a><span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
       if(catLbl && catLbl !== deptLbl)
         html += `<span class="breadcrumb-sep">›</span><span>${catLbl}</span>`;
@@ -1177,6 +1178,23 @@ function subcatSelect(btn, variantId){
         html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
       bc.innerHTML = html;
     }
+  }
+
+  // Update filter chip
+  const filterLeftEl = document.getElementById(variantId + '-filter-left');
+  if(filterLeftEl){
+    filterLeftEl.querySelectorAll('.filter-chip[data-type="category"]').forEach(c => c.remove());
+    const base    = catLbl || deptLbl;
+    const display = subLabel === 'All' ? base : `${base} / ${subLabel}`;
+    const divider = filterLeftEl.querySelector('.filter-divider');
+    const chip = document.createElement('span');
+    chip.className = 'filter-chip';
+    chip.setAttribute('data-type', 'category');
+    chip.innerHTML = `${display} <span class="chip-x" onclick="removeChip(this.parentElement,'${variantId}-filter-left')">✕</span>`;
+    chip.onclick = function(e){ if(!e.target.classList.contains('chip-x')) return; removeChip(chip, variantId+'-filter-left'); };
+    if(divider) filterLeftEl.insertBefore(chip, divider.nextSibling);
+    else filterLeftEl.appendChild(chip);
+    if(divider) divider.style.display = '';
   }
 }
 
