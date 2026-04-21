@@ -733,9 +733,21 @@ function rndSeed(base){
 }
 
 function refreshImages(){
-  SEEDS = generateSeeds();
-  renderAllGrids();
-  renderAllCarousels();
+  const grid = document.getElementById('v5-grid');
+  if(!grid) return;
+  const imgs = grid.querySelectorAll('.product-img');
+  imgs.forEach(img => { img.style.transition = 'opacity 0.15s'; img.style.opacity = '0'; });
+  setTimeout(()=>{
+    SEEDS = generateSeeds();
+    renderAllGrids();
+    const newImgs = document.getElementById('v5-grid').querySelectorAll('.product-img');
+    newImgs.forEach(img => {
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.25s';
+      // fade in after browser paints new src
+      requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ img.style.opacity = '1'; }); });
+    });
+  }, 150);
 }
 
 /* ==================== RENDER PRODUCT GRID ==================== */
@@ -1139,14 +1151,6 @@ function breadcrumbNav(variantId, level, deptId, catId, subLabel){
   if(level === 'home'){
     showToast('Prototype: Clicking Home in the breadcrumb navigates to the home screen.');
     return;
-  }
-  // Flash + refresh product images
-  const variantEl = document.getElementById(variantId);
-  if(variantEl){
-    variantEl.classList.remove('bc-flash');
-    void variantEl.offsetWidth;
-    variantEl.classList.add('bc-flash');
-    setTimeout(()=>{ variantEl.classList.remove('bc-flash'); }, 380);
   }
   refreshImages();
   if(level === 'dept'){
