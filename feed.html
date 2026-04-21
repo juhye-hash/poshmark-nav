@@ -214,7 +214,7 @@ button{cursor:pointer;font-family:inherit}
 .subcat-btn-prev.visible{opacity:1;pointer-events:auto}
 
 /* ===================== CATEGORY CAROUSEL ===================== */
-.cat-carousel-wrap{position:relative;margin-bottom:38px}
+.cat-carousel-wrap{position:relative;margin-bottom:38px;overflow:hidden}
 .cat-carousel-grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
@@ -257,10 +257,11 @@ button{cursor:pointer;font-family:inherit}
 .cat-carousel-next{right:0}
 .cat-carousel-prev{left:0;opacity:0;pointer-events:none}
 .cat-carousel-prev.visible{opacity:1;pointer-events:auto}
-.cat-carousel-grid{transition:transform 0.2s ease}
-.cat-carousel-grid.no-anim{transition:none!important}
-.cat-carousel-grid.exit-left{transform:translateX(-28px)}
-.cat-carousel-grid.exit-right{transform:translateX(28px)}
+@keyframes carouselOutLeft  { to  { transform:translateX(-100%) } }
+@keyframes carouselOutRight { to  { transform:translateX(100%)  } }
+@keyframes carouselInRight  { from{ transform:translateX(100%)  } }
+@keyframes carouselInLeft   { from{ transform:translateX(-100%) } }
+.carousel-exiting{position:absolute;top:0;left:0;width:100%;pointer-events:none}
 
 /* ===================== FILTER BAR ===================== */
 .filter-bar{
@@ -797,32 +798,36 @@ function renderCarousel(containerId, page){
   }
 }
 
+function doCarouselSlide(gridId, nextPage, dir){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  const DUR = 300;
+  const outAnim = dir === 'left' ? 'carouselOutLeft' : 'carouselOutRight';
+  const inAnim  = dir === 'left' ? 'carouselInRight' : 'carouselInLeft';
+  // Clone current content and animate it out
+  const clone = grid.cloneNode(true);
+  clone.id = '';
+  clone.classList.add('carousel-exiting');
+  clone.style.animation = `${outAnim} ${DUR}ms ease forwards`;
+  grid.parentElement.appendChild(clone);
+  // Render new content and animate it in
+  renderCarousel(gridId, nextPage);
+  grid.style.animation = `${inAnim} ${DUR}ms ease forwards`;
+  setTimeout(()=>{ clone.remove(); grid.style.animation = ''; }, DUR + 20);
+}
+
 function carouselNext(btn){
   const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
   const cur = carouselPageState[grid.id] || 0;
   if(cur >= CAROUSEL_PAGES.length - 1) return;
-  grid.classList.add('exit-left');
-  setTimeout(()=>{
-    renderCarousel(grid.id, cur + 1);
-    grid.classList.add('no-anim','exit-right');
-    grid.classList.remove('exit-left');
-    grid.offsetHeight;
-    grid.classList.remove('no-anim','exit-right');
-  }, 200);
+  doCarouselSlide(grid.id, cur + 1, 'left');
 }
 
 function carouselPrev(btn){
   const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
   const cur = carouselPageState[grid.id] || 0;
   if(cur <= 0) return;
-  grid.classList.add('exit-right');
-  setTimeout(()=>{
-    renderCarousel(grid.id, cur - 1);
-    grid.classList.add('no-anim','exit-left');
-    grid.classList.remove('exit-right');
-    grid.offsetHeight;
-    grid.classList.remove('no-anim','exit-left');
-  }, 200);
+  doCarouselSlide(grid.id, cur - 1, 'right');
 }
 
 function renderAllCarousels(){
