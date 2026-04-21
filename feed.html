@@ -260,22 +260,6 @@ button{cursor:pointer;font-family:inherit}
 .cat-carousel-wrap:hover .cat-carousel-next.active{opacity:1;pointer-events:auto}
 .cat-carousel-wrap:hover .cat-carousel-prev.visible{opacity:1;pointer-events:auto}
 
-/* Carousel view toggle */
-.carousel-view-header{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px}
-.carousel-view-tabs{display:flex;border:1px solid #e3e3e3;border-radius:6px;overflow:hidden}
-.cvt-btn{padding:4px 12px;font-size:11.5px;font-weight:400;color:#717171;background:#fff;border:none;cursor:pointer;transition:background .12s,color .12s;line-height:18px;font-family:inherit}
-.cvt-btn.active{background:#121212;color:#fff;font-weight:500}
-
-/* Merchandising view */
-.merch-grid{display:grid;grid-template-columns:repeat(3,1fr);height:184px;gap:8px}
-.merch-card{position:relative;overflow:hidden;cursor:pointer;border:none;padding:0;background:none;text-align:left;width:100%;height:100%}
-.merch-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
-.merch-card:hover img{transform:scale(1.05)}
-.merch-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.08) 55%,transparent 100%)}
-.merch-card-body{position:absolute;bottom:0;left:0;right:0;padding:11px 13px}
-.merch-card-title{font-size:14px;font-weight:600;color:#fff;line-height:1.25;margin-bottom:2px}
-.merch-card-sub{font-size:11px;color:rgba(255,255,255,.78);font-weight:400}
-.merch-card:hover .merch-card-title{text-decoration:underline}
 
 @keyframes carouselOutLeft  { to  { transform:translateX(-100%) } }
 @keyframes carouselOutRight { to  { transform:translateX(100%)  } }
@@ -593,13 +577,7 @@ button{cursor:pointer;font-family:inherit}
       <button class="subcat-btn-next" onclick="subcatNext('v5')"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_sub_next)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_sub_next" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_sub_next"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_sub_next" result="shape"/></filter></defs></svg></button>
     </div>
     <!-- Category Carousel -->
-    <div class="carousel-view-header">
-      <div class="carousel-view-tabs">
-        <button class="cvt-btn active" data-view="default" onclick="setCarouselView('default')">Default</button>
-        <button class="cvt-btn" data-view="merch" onclick="setCarouselView('merch')">Merchandising</button>
-      </div>
-    </div>
-    <div class="cat-carousel-wrap">
+    <div class="cat-carousel-wrap" style="display:none">
       <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev5)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev5" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev5"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev5" result="shape"/></filter></defs></svg></button>
       <div class="cat-carousel-grid" id="v5-cat-carousel"></div>
       <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
@@ -819,64 +797,6 @@ function renderAllGrids(){
 }
 
 /* ==================== RENDER CATEGORY CAROUSEL ==================== */
-const MERCH_PAGES = [
-  // Page 0 — Women seasonal campaigns
-  [
-    { theme:'Golden Hour',     sub:'Tops & Dresses',    cat:'Tops',             seed:'merch-w-golden' },
-    { theme:'Bag It Up',       sub:'Bags & Accessories',cat:'Bags',             seed:'merch-w-bags' },
-    { theme:'Layer Season',    sub:'Jackets & Coats',   cat:'Jackets & Coats',  seed:'merch-w-layer' },
-  ],
-  // Page 1 — Men seasonal campaigns
-  [
-    { theme:'Off Duty',        sub:'Casual & Denim',    cat:'Jeans',            seed:'merch-m-offduty' },
-    { theme:'Sharp & Polished',sub:'Suits & Blazers',   cat:'Suits & Blazers',  seed:'merch-m-sharp' },
-    { theme:'Keep It Cool',    sub:'Shorts & Activewear',cat:'Shorts',          seed:'merch-m-cool' },
-  ],
-];
-
-let carouselViewMode = 'default';
-
-function setCarouselView(mode){
-  carouselViewMode = mode;
-  document.querySelectorAll('.cvt-btn').forEach(b => b.classList.toggle('active', b.dataset.view === mode));
-  const page = carouselPageState['v5-cat-carousel'] || 0;
-  if(mode === 'merch') renderMerchCarousel('v5-cat-carousel', page);
-  else renderCarousel('v5-cat-carousel', page);
-}
-
-function renderMerchCarousel(containerId, page){
-  const el = document.getElementById(containerId);
-  if(!el) return;
-  if(page === undefined) page = carouselPageState[containerId] || 0;
-  carouselPageState[containerId] = page;
-  const items = MERCH_PAGES[page] || MERCH_PAGES[0];
-  const variantId = containerId.replace('-cat-carousel','');
-  el.className = 'merch-grid cat-carousel-grid';
-  el.innerHTML = items.map(item => {
-    const safeLabel = item.cat.replace(/'/g,"\\'");
-    return `<button class="merch-card" onclick="carouselCatSelect('${variantId}','${safeLabel}',${page})" title="Try selecting this category">
-      <img src="https://picsum.photos/seed/${item.seed}/280/370" loading="lazy" alt="${item.theme}">
-      <div class="merch-card-overlay"></div>
-      <div class="merch-card-body">
-        <div class="merch-card-title">${item.theme}</div>
-        <div class="merch-card-sub">${item.sub}</div>
-      </div>
-    </button>`;
-  }).join('');
-  const wrap = el.closest('.cat-carousel-wrap');
-  if(wrap){
-    const prevBtn = wrap.querySelector('.cat-carousel-prev');
-    const nextBtn = wrap.querySelector('.cat-carousel-next');
-    if(prevBtn) prevBtn.classList.toggle('visible', page > 0);
-    if(nextBtn) nextBtn.classList.toggle('active', page < MERCH_PAGES.length - 1);
-  }
-}
-
-function renderActiveCarousel(containerId, page){
-  if(carouselViewMode === 'merch') renderMerchCarousel(containerId, page);
-  else renderCarousel(containerId, page);
-}
-
 const carouselPageState = {};
 
 function renderCarousel(containerId, page){
@@ -918,7 +838,7 @@ function doCarouselSlide(gridId, nextPage, dir){
   clone.style.animation = `${outAnim} ${DUR}ms ease forwards`;
   grid.parentElement.appendChild(clone);
   // Render new content and animate it in
-  renderActiveCarousel(gridId, nextPage);
+  renderCarousel(gridId, nextPage);
   grid.style.animation = `${inAnim} ${DUR}ms ease forwards`;
   setTimeout(()=>{ clone.remove(); grid.style.animation = ''; }, DUR + 20);
 }
@@ -1447,12 +1367,10 @@ function removeChip(chip, containerId){
       const subcatWrap = document.getElementById(variantId + '-subcat');
       if(subcatWrap) subcatWrap.classList.remove('active');
       const carousel = variantEl.querySelector('.cat-carousel-wrap');
-      const carouselHeader = variantEl.querySelector('.carousel-view-header');
-      if(carousel){ carousel.style.display = ''; }
-      if(carouselHeader){ carouselHeader.style.display = ''; }
+      if(carousel){ carousel.style.display = 'none'; }
 
       // Reset carousel to page 0
-      renderActiveCarousel(variantId + '-cat-carousel', 0);
+      renderCarousel(variantId + '-cat-carousel', 0);
     }
 
     // Refresh product images
