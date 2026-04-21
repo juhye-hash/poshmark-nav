@@ -185,8 +185,8 @@ button{cursor:pointer;font-family:inherit}
   display:flex;align-items:center;gap:6px;
   font-size:13px;color:#717171;margin-bottom:12px;
 }
-.breadcrumb a{color:#717171}
-.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb a,.breadcrumb-link{color:#717171;cursor:pointer}
+.breadcrumb a:hover,.breadcrumb-link:hover{text-decoration:underline}
 .breadcrumb-sep{font-size:10px;color:#aaa}
 
 .page-title{
@@ -534,7 +534,7 @@ button{cursor:pointer;font-family:inherit}
 <div class="variant-page active" id="v5">
   <div class="page-wrap">
     <div class="breadcrumb">
-      <a href="#">Home</a>
+      <a href="#" onclick="breadcrumbNav('v5','home');return false">Home</a>
       <span class="breadcrumb-sep">›</span>
       <span>Women</span>
     </div>
@@ -1034,14 +1034,7 @@ function catSelect(deptId, catId, catLabel, subLabel){
   if(variantEl){
     const bc = variantEl.querySelector('.breadcrumb');
     if(bc){
-      let html = `<a href="#">Home</a><span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
-      if(catId && catLabel !== deptLbl){
-        html += `<span class="breadcrumb-sep">›</span><span>${catLabel}</span>`;
-      }
-      if(subLabel && subLabel !== 'All'){
-        html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
-      }
-      bc.innerHTML = html;
+      bc.innerHTML = buildBreadcrumbHtml(variantId, deptLbl, deptId, catId ? catLabel : '', catId, subLabel);
     }
 
     // Update page title
@@ -1073,6 +1066,59 @@ function catSelect(deptId, catId, catLabel, subLabel){
   }
 
   closeCatPanel();
+}
+
+/* ==================== BREADCRUMB HELPERS ==================== */
+function buildBreadcrumbHtml(variantId, deptLbl, deptId, catLbl, catId, subLabel){
+  const hasCat    = !!(catLbl && catLbl !== deptLbl && catId);
+  const hasSubcat = !!(subLabel && subLabel !== 'All');
+  let html = `<a href="#" onclick="breadcrumbNav('${variantId}','home');return false">Home</a>`;
+  if(hasCat || hasSubcat){
+    html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','dept','${deptId}')">${deptLbl}</span>`;
+  } else if(deptLbl){
+    html += `<span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
+  }
+  if(hasCat){
+    if(hasSubcat){
+      html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','cat','${deptId}','${catId}')">${catLbl}</span>`;
+    } else {
+      html += `<span class="breadcrumb-sep">›</span><span>${catLbl}</span>`;
+    }
+  }
+  if(hasSubcat){
+    html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
+  }
+  return html;
+}
+
+function breadcrumbNav(variantId, level, deptId, catId){
+  panelState.anchorBarId = variantId + '-filter-bar';
+  panelState.anchorBtn   = document.getElementById(variantId + '-cat-btn');
+  if(level === 'home'){
+    panelState.selectedDeptId   = null;
+    panelState.selectedCatId    = null;
+    panelState.selectedSubLabel = null;
+    const variantEl = document.getElementById(variantId);
+    if(variantEl){
+      const bc = variantEl.querySelector('.breadcrumb');
+      if(bc) bc.innerHTML = `<a href="#" onclick="breadcrumbNav('${variantId}','home');return false">Home</a>`;
+      const carousel   = variantEl.querySelector('.cat-carousel-wrap');
+      const subcatWrap = document.getElementById(variantId + '-subcat');
+      if(carousel) carousel.style.display = '';
+      if(subcatWrap) subcatWrap.classList.remove('active');
+    }
+    const filterLeftEl = document.getElementById(variantId + '-filter-left');
+    if(filterLeftEl) filterLeftEl.querySelectorAll('.filter-chip[data-type="category"]').forEach(c => c.remove());
+    const catBtn = document.getElementById(variantId + '-cat-btn');
+    if(catBtn) catBtn.classList.remove('is-active');
+  } else if(level === 'dept'){
+    const dept = CAT_TREE.find(d => d.id === deptId);
+    if(dept) catSelect(deptId, '', dept.label, 'All');
+  } else if(level === 'cat'){
+    const dept = CAT_TREE.find(d => d.id === deptId);
+    const cat  = dept && dept.cats.find(c => c.id === catId);
+    if(cat) catSelect(deptId, catId, cat.label, 'All');
+  }
 }
 
 /* ==================== CAROUSEL CATEGORY SELECT ==================== */
@@ -1171,12 +1217,7 @@ function subcatSelect(btn, variantId){
   if(variantEl){
     const bc = variantEl.querySelector('.breadcrumb');
     if(bc){
-      let html = `<a href="#">Home</a><span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
-      if(catLbl && catLbl !== deptLbl)
-        html += `<span class="breadcrumb-sep">›</span><span>${catLbl}</span>`;
-      if(subLabel && subLabel !== 'All')
-        html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
-      bc.innerHTML = html;
+      bc.innerHTML = buildBreadcrumbHtml(variantId, deptLbl, panelState.selectedDeptId, catLbl, panelState.selectedCatId, subLabel);
     }
   }
 
