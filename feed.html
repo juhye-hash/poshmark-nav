@@ -359,8 +359,9 @@ button{cursor:pointer;font-family:inherit}
   flex-shrink:0;display:inline-flex;align-items:center;
 }
 .product-name{
-  font-size:15px;color:#121212;line-height:1.33;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13px;color:#121212;line-height:1.38;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
   min-width:0;flex:1;
 }
 .product-price-row{
@@ -368,9 +369,9 @@ button{cursor:pointer;font-family:inherit}
   gap:8px;
 }
 .product-prices{display:flex;align-items:baseline;gap:5px}
-.price-now{font-size:15px;font-weight:600;color:#121212}
-.price-was{font-size:15px;font-weight:500;color:#999;text-decoration:line-through}
-.product-size{font-size:15px;color:#999}
+.price-now{font-size:14px;font-weight:600;color:#121212}
+.price-was{font-size:13px;font-weight:500;color:#999;text-decoration:line-through}
+.product-size{font-size:13px;color:#999}
 
 /* ===================== LOADING ===================== */
 .loading-row{
@@ -768,9 +769,11 @@ function renderCarousel(containerId, page){
   if(page === undefined) page = carouselPageState[containerId] || 0;
   carouselPageState[containerId] = page;
   const items = CAROUSEL_PAGES[page] || CAROUSEL_PAGES[0];
+  const variantId = containerId.replace('-cat-carousel','');
   el.innerHTML = items.map(item=>{
     const seed = SEEDS.cats[item.seed] || item.seed;
-    return `<button class="cat-carousel-item" onclick="alert('Category: ${item.label}')">
+    const safeLabel = item.label.replace(/'/g,"\\'");
+    return `<button class="cat-carousel-item" onclick="carouselCatSelect('${variantId}','${safeLabel}',${page})">
       <img class="cat-thumb" src="https://picsum.photos/seed/${seed}/130/172" loading="lazy" alt="${item.label}">
       <span class="cat-thumb-label">${item.label}</span>
     </button>`;
@@ -1059,7 +1062,7 @@ function catSelect(deptId, catId, catLabel, subLabel){
       if(carousel) carousel.style.display = 'none';
       if(subcatWrap){
         const cat = dept ? dept.cats.find(c=>c.id===catId) : null;
-        if(cat) renderSubcat(variantId, cat);
+        if(cat) renderSubcat(variantId, cat, subLabel);
         subcatWrap.classList.add('active');
       }
     } else {
@@ -1072,16 +1075,55 @@ function catSelect(deptId, catId, catLabel, subLabel){
   closeCatPanel();
 }
 
+/* ==================== CAROUSEL CATEGORY SELECT ==================== */
+function carouselCatSelect(variantId, itemLabel, pageIdx){
+  // Special label → {deptId, catId} for labels that don't match CAT_TREE exactly
+  const labelMap = {
+    "Girls' Clothing": {deptId:'kids', catId:'k-grl'},
+    "Boys' Clothing":  {deptId:'kids', catId:'k-boy'},
+    "Baby & Toddler":  {deptId:'kids', catId:'k-bby'},
+    "Home Decor":      {deptId:'home', catId:'h-dec'},
+    "Bedding":         {deptId:'home', catId:'h-bed'},
+    "Bath":            {deptId:'home', catId:'h-bat'},
+  };
+  const pageDepts = ['women','men',null];
+  let deptId, catId;
+  if(labelMap[itemLabel]){
+    ({deptId, catId} = labelMap[itemLabel]);
+  } else {
+    const pageDeptId = pageDepts[pageIdx];
+    if(pageDeptId){
+      deptId = pageDeptId;
+      const dept = CAT_TREE.find(d=>d.id===deptId);
+      const cat  = dept && dept.cats.find(c=>c.label===itemLabel);
+      catId = cat ? cat.id : null;
+    } else {
+      for(const d of CAT_TREE){
+        const c = d.cats.find(c=>c.label===itemLabel);
+        if(c){ deptId=d.id; catId=c.id; break; }
+      }
+    }
+  }
+  if(!deptId) return;
+  const dept = CAT_TREE.find(d=>d.id===deptId);
+  const cat  = dept && dept.cats.find(c=>c.id===catId);
+  panelState.anchorBarId = variantId+'-filter-bar';
+  panelState.anchorBtn   = null;
+  catSelect(deptId, catId||'', cat ? cat.label : dept.label, 'All');
+}
+
 /* ==================== SUBCATEGORY SCROLLER ==================== */
 const subcatScrollState = {};
 
-function renderSubcat(variantId, cat){
+function renderSubcat(variantId, cat, selectedSub){
   const row = document.getElementById(variantId + '-subcat-row');
   if(!row) return;
   const subs = cat.subs[0] === 'All' ? cat.subs : ['All', ...cat.subs];
+  const activeSub = selectedSub || 'All';
   row.innerHTML = subs.map((sub, i) => {
     const seed = `${cat.id}-${sub.toLowerCase().replace(/[\s&\/]+/g,'-')}`;
-    return `<button class="subcat-item${i===0?' active':''}" onclick="subcatSelect(this,'${variantId}')">
+    const isActive = sub === activeSub;
+    return `<button class="subcat-item${isActive?' active':''}" onclick="subcatSelect(this,'${variantId}')">
       <div class="subcat-img-circle">
         <img src="https://picsum.photos/seed/${seed}/100/100" loading="lazy" alt="${sub}">
       </div>
@@ -1089,17 +1131,24 @@ function renderSubcat(variantId, cat){
       <span class="subcat-label">${sub}</span>
     </button>`;
   }).join('');
-  subcatScrollState[variantId] = 0;
-  row.style.transform = 'translateX(0)';
-  // show/hide next btn
+  const ITEM_W = 127; // 104 + 23
+  const visible = Math.floor(1388 / ITEM_W);
+  // scroll so active item is in view
+  const activeIdx = subs.indexOf(activeSub);
+  let scrollPos = 0;
+  if(activeIdx >= visible){
+    scrollPos = Math.min(activeIdx, Math.max(0, subs.length - visible));
+  }
+  subcatScrollState[variantId] = scrollPos;
+  row.style.transform = scrollPos > 0 ? `translateX(-${scrollPos * ITEM_W}px)` : 'translateX(0)';
+  // show/hide prev/next btn
   const wrap = document.getElementById(variantId + '-subcat');
   if(wrap){
     const nextBtn = wrap.querySelector('.subcat-btn-next');
-    const ITEM_W = 127; // 104 + 23
-    const visible = Math.floor(1388 / ITEM_W);
-    if(nextBtn) nextBtn.style.display = subs.length > visible ? 'flex' : 'none';
     const prevBtn = wrap.querySelector('.subcat-btn-prev');
-    if(prevBtn) prevBtn.classList.remove('visible');
+    if(nextBtn) nextBtn.style.display = subs.length > visible ? 'flex' : 'none';
+    if(nextBtn) nextBtn.style.opacity = scrollPos >= Math.max(0, subs.length - visible) ? '0.25' : '1';
+    if(prevBtn) prevBtn.classList.toggle('visible', scrollPos > 0);
   }
 }
 
