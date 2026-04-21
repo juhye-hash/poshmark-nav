@@ -1040,8 +1040,10 @@ function catSelect(deptId, catId, catLabel, subLabel){
     // Update page title
     const titleEl = variantEl.querySelector('.page-title');
     if(titleEl){
-      if(catId){
-        titleEl.textContent = `Women's ${catLabel}`;
+      if(catId && subLabel && subLabel !== 'All'){
+        titleEl.textContent = `${deptLbl}'s ${subLabel}`;
+      } else if(catId){
+        titleEl.textContent = `${deptLbl}'s ${catLabel}`;
       } else {
         titleEl.textContent = `${deptLbl}'s Clothing, Accessories & Shoes`;
       }
@@ -1236,6 +1238,19 @@ function subcatSelect(btn, variantId){
     if(divider) filterLeftEl.insertBefore(chip, divider.nextSibling);
     else filterLeftEl.appendChild(chip);
     if(divider) divider.style.display = '';
+  }
+
+  // Update page title
+  const variantEl2 = document.getElementById(variantId);
+  if(variantEl2){
+    const titleEl = variantEl2.querySelector('.page-title');
+    if(titleEl){
+      if(subLabel && subLabel !== 'All'){
+        titleEl.textContent = `${deptLbl}'s ${subLabel}`;
+      } else {
+        titleEl.textContent = `${deptLbl}'s ${catLbl}`;
+      }
+    }
   }
 }
 
