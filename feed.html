@@ -253,11 +253,12 @@ button{cursor:pointer;font-family:inherit}
   background:none;border:none;padding:0;cursor:pointer;
   z-index:2;
   display:flex;align-items:center;justify-content:center;
-  transition:opacity 0.15s;
+  opacity:0;pointer-events:none;transition:opacity 0.15s;
 }
 .cat-carousel-next{right:0}
-.cat-carousel-prev{left:0;opacity:0;pointer-events:none}
-.cat-carousel-prev.visible{opacity:1;pointer-events:auto}
+.cat-carousel-prev{left:0}
+.cat-carousel-wrap:hover .cat-carousel-next.active{opacity:1;pointer-events:auto}
+.cat-carousel-wrap:hover .cat-carousel-prev.visible{opacity:1;pointer-events:auto}
 @keyframes carouselOutLeft  { to  { transform:translateX(-100%) } }
 @keyframes carouselOutRight { to  { transform:translateX(100%)  } }
 @keyframes carouselInRight  { from{ transform:translateX(100%)  } }
@@ -803,8 +804,7 @@ function renderCarousel(containerId, page){
     const prevBtn = wrap.querySelector('.cat-carousel-prev');
     const nextBtn = wrap.querySelector('.cat-carousel-next');
     if(prevBtn) prevBtn.classList.toggle('visible', page > 0);
-    const atEnd = page >= CAROUSEL_PAGES.length - 1;
-    if(nextBtn){ nextBtn.style.opacity = atEnd ? '0' : '1'; nextBtn.style.pointerEvents = atEnd ? 'none' : ''; }
+    if(nextBtn) nextBtn.classList.toggle('active', page < CAROUSEL_PAGES.length - 1);
   }
 }
 
