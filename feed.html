@@ -197,6 +197,22 @@ button{cursor:pointer;font-family:inherit}
   -moz-osx-font-smoothing:grayscale;
 }
 
+/* ===================== SUBCATEGORY SCROLLER ===================== */
+.subcat-wrap{position:relative;margin-bottom:20px;display:none}
+.subcat-wrap.active{display:block}
+.subcat-scroll{overflow:hidden}
+.subcat-row{display:flex;gap:23px;align-items:flex-start;transition:transform 0.3s ease}
+.subcat-item{width:104px;height:130px;flex-shrink:0;position:relative;cursor:pointer;background:none;border:none;padding:0}
+.subcat-img-circle{position:absolute;top:4px;left:4px;right:4px;bottom:30px;border-radius:50%;overflow:hidden;background:#f2f2f2}
+.subcat-img-circle img{width:100%;height:100%;object-fit:cover}
+.subcat-ring{position:absolute;top:0;left:50%;transform:translateX(-50%);width:104px;height:100px;border:1.1px solid #121212;border-radius:50%;opacity:0;transition:opacity 0.15s;pointer-events:none}
+.subcat-item.active .subcat-ring{opacity:1}
+.subcat-label{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:96px;font-size:13px;line-height:18px;color:#121212;text-align:center}
+.subcat-btn-next,.subcat-btn-prev{position:absolute;top:34px;width:32px;height:32px;background:#fff;border:1px solid #e3e3e3;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.17);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.subcat-btn-next{right:-20px}
+.subcat-btn-prev{left:-20px;opacity:0;pointer-events:none;transition:opacity .15s}
+.subcat-btn-prev.visible{opacity:1;pointer-events:auto}
+
 /* ===================== CATEGORY CAROUSEL ===================== */
 .cat-carousel-wrap{position:relative;margin-bottom:38px}
 .cat-carousel-grid{
@@ -513,176 +529,6 @@ button{cursor:pointer;font-family:inherit}
 
 <!-- ==================== VARIANT PAGES ==================== -->
 
-<!-- ======= VARIANT 1: Default (no carousel) ======= -->
-<div class="variant-page" id="v1">
-  <div class="page-wrap">
-    <div class="breadcrumb">
-      <a href="#">Home</a>
-      <span class="breadcrumb-sep">›</span>
-      <span>Women</span>
-    </div>
-    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
-    <div class="filter-bar" id="v1-filter-bar">
-      <div class="filter-left" id="v1-filter-left">
-        <button class="filter-pill filter-pill-icon" title="Search">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </button>
-        <button class="filter-pill is-active" onclick="toggleCatPanel(this,'v1-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-      </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <div class="product-grid" id="v1-grid"></div>
-    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
-  </div>
-</div>
-
-<!-- ======= VARIANT 2: With category carousel ======= -->
-<div class="variant-page" id="v2">
-  <div class="page-wrap">
-    <div class="breadcrumb">
-      <a href="#">Home</a>
-      <span class="breadcrumb-sep">›</span>
-      <span>Women</span>
-    </div>
-    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
-    <!-- Category Carousel -->
-    <div class="cat-carousel-wrap">
-      <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev" result="shape"/></filter></defs></svg></button>
-      <div class="cat-carousel-grid" id="v2-cat-carousel"></div>
-      <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
-    </div>
-    <div class="filter-bar" id="v2-filter-bar">
-      <div class="filter-left" id="v2-filter-left">
-        <button class="filter-pill filter-pill-icon" title="Search">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </button>
-        <button class="filter-pill" onclick="toggleCatPanel(this,'v2-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-      </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <div class="product-grid" id="v2-grid"></div>
-    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
-  </div>
-</div>
-
-<!-- ======= VARIANT 3: With sidebar ======= -->
-<div class="variant-page" id="v3">
-  <div style="display:flex;max-width:1388px;margin:0 auto;padding:48px 0 120px;gap:32px">
-    <!-- Sidebar -->
-    <aside style="width:220px;flex-shrink:0">
-      <div style="font-size:16px;font-weight:600;margin-bottom:16px">Filters</div>
-      <div style="border-top:1px solid #ececec">
-        <details open style="padding:16px 0;border-bottom:1px solid #ececec">
-          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
-            Department <span>▾</span>
-          </summary>
-          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked> Women</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Men</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Kids</label>
-          </div>
-        </details>
-        <details style="padding:16px 0;border-bottom:1px solid #ececec">
-          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
-            Category <span>›</span>
-          </summary>
-        </details>
-        <details style="padding:16px 0;border-bottom:1px solid #ececec">
-          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
-            Brand <span>›</span>
-          </summary>
-        </details>
-        <details style="padding:16px 0;border-bottom:1px solid #ececec">
-          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
-            Size <span>›</span>
-          </summary>
-        </details>
-        <details style="padding:16px 0;border-bottom:1px solid #ececec">
-          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
-            Price <span>›</span>
-          </summary>
-        </details>
-      </div>
-    </aside>
-    <!-- Main -->
-    <div style="flex:1;min-width:0">
-      <div class="breadcrumb">
-        <a href="#">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <span>Women</span>
-      </div>
-      <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
-      <div class="filter-bar" id="v3-filter-bar">
-        <div class="filter-left" id="v3-filter-left">
-          <button class="filter-pill filter-pill-icon">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </button>
-          <button class="filter-pill" onclick="toggleCatPanel(this,'v3-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-          <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-          <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-          <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-          <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        </div>
-        <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      </div>
-      <div class="product-grid" id="v3-grid" style="grid-template-columns:repeat(5,1fr)"></div>
-      <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ======= VARIANT 4: My Size active ======= -->
-<div class="variant-page" id="v4">
-  <div class="page-wrap">
-    <div class="breadcrumb">
-      <a href="#">Home</a>
-      <span class="breadcrumb-sep">›</span>
-      <span>Women</span>
-    </div>
-    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
-    <div class="cat-carousel-wrap">
-      <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev4)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev4" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev4"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev4" result="shape"/></filter></defs></svg></button>
-      <div class="cat-carousel-grid" id="v4-cat-carousel"></div>
-      <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
-    </div>
-    <div class="filter-bar" id="v4-filter-bar">
-      <div class="filter-left" id="v4-filter-left">
-        <button class="filter-pill filter-pill-icon">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </button>
-        <button class="filter-pill" onclick="toggleCatPanel(this,'v4-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill is-active">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <div class="filter-divider"></div>
-        <span class="filter-chip" data-type="category" onclick="removeChip(this,'v4-filter-left')">Women <span class="chip-x">✕</span></span>
-        <span class="filter-chip" onclick="removeChip(this,'v4-filter-left')">US 6 <span class="chip-x">✕</span></span>
-      </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <div class="product-grid" id="v4-grid"></div>
-    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
-  </div>
-</div>
-
 <!-- ======= VARIANT 5: Latest design (main) ======= -->
 <div class="variant-page active" id="v5">
   <div class="page-wrap">
@@ -692,6 +538,14 @@ button{cursor:pointer;font-family:inherit}
       <span>Women</span>
     </div>
     <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <!-- Subcategory Scroller (shown when breadcrumb = 3 items) -->
+    <div class="subcat-wrap" id="v5-subcat">
+      <div class="subcat-scroll">
+        <div class="subcat-row" id="v5-subcat-row"></div>
+      </div>
+      <button class="subcat-btn-prev" onclick="subcatPrev('v5')"><svg width="32" height="32" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_sub_prev)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_sub_prev" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_sub_prev"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_sub_prev" result="shape"/></filter></defs></svg></button>
+      <button class="subcat-btn-next" onclick="subcatNext('v5')"><svg width="32" height="32" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_sub_next)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_sub_next" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_sub_next"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_sub_next" result="shape"/></filter></defs></svg></button>
+    </div>
     <!-- Category Carousel -->
     <div class="cat-carousel-wrap">
       <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev5)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev5" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev5"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev5" result="shape"/></filter></defs></svg></button>
@@ -730,13 +584,6 @@ button{cursor:pointer;font-family:inherit}
 <!-- ==================== CONTROLS ==================== -->
 <button id="refresh-btn" onclick="refreshImages()">↻ 이미지 새로고침</button>
 
-<div class="variant-switcher">
-  <button class="vbtn" onclick="switchVariant(1)">V1</button>
-  <button class="vbtn" onclick="switchVariant(2)">V2</button>
-  <button class="vbtn" onclick="switchVariant(3)">V3</button>
-  <button class="vbtn" onclick="switchVariant(4)">V4</button>
-  <button class="vbtn on" onclick="switchVariant(5)">V5 (New)</button>
-</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -873,7 +720,7 @@ function makeCard(name,price,size,hasFree,hasAd,hasNwt,seed){
   return `<div class="product-card">
     <div class="product-img-wrap">
       <img src="${imgUrl}" class="product-img" loading="lazy" alt="${name}">
-      ${hasFree ? `<div class="badge-free"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 3.5l3 3L9 1" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg> Free</div>` : ''}
+      ${hasFree ? `<div class="badge-free"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.03809 4C8.70083 4 9.23828 4.53745 9.23828 5.2002V10.9062C9.23828 11.2375 8.96987 11.5066 8.63867 11.5068H7.68457C7.70559 11.3907 7.71774 11.2713 7.71777 11.1494C7.71772 10.0655 6.85223 9.16897 5.76367 9.16895C4.6751 9.16895 3.80962 10.0654 3.80957 11.1494C3.8096 11.2713 3.82176 11.3907 3.84277 11.5068H3.2002C2.53754 11.5068 2.00014 10.9693 2 10.3066V5.2002C2 4.53745 2.53745 4 3.2002 4H8.03809Z" fill="white"/><path d="M11.4824 5.50098C11.653 5.50098 11.8143 5.58029 11.9209 5.71582L13.876 8.2041C13.9557 8.30551 13.999 8.43166 13.999 8.56152V10.9346C13.999 11.0307 13.9728 11.1198 13.9316 11.1992C13.9321 11.1826 13.9346 11.1661 13.9346 11.1494C13.9345 10.0655 13.069 9.16994 11.9805 9.16992C11.285 9.16992 10.6818 9.53629 10.3359 10.083V5.50098H11.4824Z" fill="white"/><circle cx="5.77969" cy="11.15" r="0.85" fill="white"/><circle cx="11.9789" cy="11.15" r="0.85" fill="white"/></svg> Free</div>` : ''}
       <button class="badge-heart">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.4951 6.84961C17.1288 6.84961 18.5389 7.99514 18.9854 9.51855L19.0615 9.82812C19.4594 11.8151 18.4578 13.8538 16.9727 15.5312C16.579 15.9753 16.1524 16.3893 15.6953 16.7646H15.6943C14.7914 17.5071 13.7844 18.1233 12.9932 18.5566C12.5999 18.772 12.2645 18.9396 12.0293 19.0527C12.0194 19.0575 12.0095 19.0618 12 19.0664C11.9905 19.0618 11.9806 19.0575 11.9707 19.0527C11.7355 18.9396 11.4002 18.7721 11.0068 18.5566C10.2156 18.1232 9.20859 17.5068 8.30566 16.7646H8.30469C7.84756 16.3893 7.42099 15.9753 7.02734 15.5312C5.54182 13.854 4.54064 11.8146 4.93848 9.82812C5.27348 8.15322 6.76156 6.84961 8.50488 6.84961C9.6489 6.84961 10.6708 7.33636 11.373 8.10352L12 8.78809L12.627 8.10352C13.3292 7.33637 14.3511 6.84962 15.4951 6.84961Z" stroke="#121212" stroke-width="1.7"/></svg>
       </button>
@@ -909,10 +756,6 @@ function renderGrid(containerId, seeds){
 }
 
 function renderAllGrids(){
-  renderGrid('v1-grid', SEEDS.grids.v1);
-  renderGrid('v2-grid', SEEDS.grids.v2);
-  renderGrid('v3-grid', SEEDS.grids.v3.slice(0,25));
-  renderGrid('v4-grid', SEEDS.grids.v4);
   renderGrid('v5-grid', SEEDS.grids.v5);
 }
 
@@ -959,8 +802,6 @@ function carouselPrev(btn){
 }
 
 function renderAllCarousels(){
-  renderCarousel('v2-cat-carousel', 0);
-  renderCarousel('v4-cat-carousel', 0);
   renderCarousel('v5-cat-carousel', 0);
 }
 
@@ -1185,7 +1026,8 @@ function catSelect(deptId, catId, catLabel, subLabel){
   if(catBtn){ catBtn.classList.add('is-active'); }
 
   // Update breadcrumb of the current variant
-  const variantEl = document.getElementById(barId.replace('-filter-bar',''));
+  const variantId = barId.replace('-filter-bar','');
+  const variantEl = document.getElementById(variantId);
   if(variantEl){
     const bc = variantEl.querySelector('.breadcrumb');
     if(bc){
@@ -1198,9 +1040,108 @@ function catSelect(deptId, catId, catLabel, subLabel){
       }
       bc.innerHTML = html;
     }
+
+    // Update page title
+    const titleEl = variantEl.querySelector('.page-title');
+    if(titleEl){
+      if(catId){
+        titleEl.textContent = `Women's ${catLabel}`;
+      } else {
+        titleEl.textContent = `${deptLbl}'s Clothing, Accessories & Shoes`;
+      }
+    }
+
+    // Toggle carousel vs subcat scroller
+    const carousel = variantEl.querySelector('.cat-carousel-wrap');
+    const subcatWrap = document.getElementById(variantId + '-subcat');
+    if(catId){
+      // 3-item breadcrumb → show subcat scroller
+      if(carousel) carousel.style.display = 'none';
+      if(subcatWrap){
+        const cat = dept ? dept.cats.find(c=>c.id===catId) : null;
+        if(cat) renderSubcat(variantId, cat);
+        subcatWrap.classList.add('active');
+      }
+    } else {
+      // 2-item breadcrumb → show carousel
+      if(carousel) carousel.style.display = '';
+      if(subcatWrap) subcatWrap.classList.remove('active');
+    }
   }
 
   closeCatPanel();
+}
+
+/* ==================== SUBCATEGORY SCROLLER ==================== */
+const subcatScrollState = {};
+
+function renderSubcat(variantId, cat){
+  const row = document.getElementById(variantId + '-subcat-row');
+  if(!row) return;
+  const subs = cat.subs[0] === 'All' ? cat.subs : ['All', ...cat.subs];
+  row.innerHTML = subs.map((sub, i) => {
+    const seed = `${cat.id}-${sub.toLowerCase().replace(/[\s&\/]+/g,'-')}`;
+    return `<button class="subcat-item${i===0?' active':''}" onclick="subcatSelect(this,'${variantId}')">
+      <div class="subcat-img-circle">
+        <img src="https://picsum.photos/seed/${seed}/100/100" loading="lazy" alt="${sub}">
+      </div>
+      <div class="subcat-ring"></div>
+      <span class="subcat-label">${sub}</span>
+    </button>`;
+  }).join('');
+  subcatScrollState[variantId] = 0;
+  row.style.transform = 'translateX(0)';
+  // show/hide next btn
+  const wrap = document.getElementById(variantId + '-subcat');
+  if(wrap){
+    const nextBtn = wrap.querySelector('.subcat-btn-next');
+    const ITEM_W = 127; // 104 + 23
+    const visible = Math.floor(1388 / ITEM_W);
+    if(nextBtn) nextBtn.style.display = subs.length > visible ? 'flex' : 'none';
+    const prevBtn = wrap.querySelector('.subcat-btn-prev');
+    if(prevBtn) prevBtn.classList.remove('visible');
+  }
+}
+
+function subcatSelect(btn, variantId){
+  const row = document.getElementById(variantId + '-subcat-row');
+  if(!row) return;
+  row.querySelectorAll('.subcat-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function subcatNext(variantId){
+  const row = document.getElementById(variantId + '-subcat-row');
+  if(!row) return;
+  const ITEM_W = 127;
+  const itemCount = row.children.length;
+  const visible = Math.floor(1388 / ITEM_W);
+  const max = Math.max(0, itemCount - visible);
+  const cur = subcatScrollState[variantId] || 0;
+  const next = Math.min(cur + visible, max);
+  subcatScrollState[variantId] = next;
+  row.style.transform = `translateX(-${next * ITEM_W}px)`;
+  const wrap = document.getElementById(variantId + '-subcat');
+  if(wrap){
+    wrap.querySelector('.subcat-btn-prev')?.classList.toggle('visible', next > 0);
+    wrap.querySelector('.subcat-btn-next').style.opacity = next >= max ? '0.25' : '1';
+  }
+}
+
+function subcatPrev(variantId){
+  const row = document.getElementById(variantId + '-subcat-row');
+  if(!row) return;
+  const ITEM_W = 127;
+  const visible = Math.floor(1388 / ITEM_W);
+  const cur = subcatScrollState[variantId] || 0;
+  const prev = Math.max(0, cur - visible);
+  subcatScrollState[variantId] = prev;
+  row.style.transform = `translateX(-${prev * ITEM_W}px)`;
+  const wrap = document.getElementById(variantId + '-subcat');
+  if(wrap){
+    wrap.querySelector('.subcat-btn-prev')?.classList.toggle('visible', prev > 0);
+    wrap.querySelector('.subcat-btn-next').style.opacity = '1';
+  }
 }
 
 function removeChip(chip, containerId){
