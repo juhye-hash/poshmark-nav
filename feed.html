@@ -228,6 +228,13 @@ button{cursor:pointer;font-family:inherit}
   text-align:left;
 }
 .cat-carousel-item:hover .cat-thumb-label{text-decoration:underline}
+.cat-carousel-item[title]:hover::after{
+  content:attr(title);
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:rgba(18,18,18,0.8);color:#fff;font-size:11px;line-height:1.4;
+  padding:5px 9px;border-radius:6px;white-space:nowrap;pointer-events:none;
+  z-index:10;
+}
 .cat-thumb{
   position:absolute;left:0;top:0;
   width:65px;height:86px;
@@ -243,14 +250,17 @@ button{cursor:pointer;font-family:inherit}
 .cat-carousel-next,.cat-carousel-prev{
   position:absolute;top:50%;transform:translateY(-50%);
   background:none;border:none;padding:0;cursor:pointer;
+  z-index:2;
   display:flex;align-items:center;justify-content:center;
   transition:opacity 0.15s;
 }
-.cat-carousel-next{right:-20px}
-.cat-carousel-prev{left:-20px;opacity:0;pointer-events:none}
+.cat-carousel-next{right:0}
+.cat-carousel-prev{left:0;opacity:0.3;pointer-events:none}
 .cat-carousel-prev.visible{opacity:1;pointer-events:auto}
-.cat-carousel-grid{transition:opacity 0.18s}
-.cat-carousel-grid.fading{opacity:0}
+.cat-carousel-grid{transition:opacity 0.2s ease,transform 0.2s ease}
+.cat-carousel-grid.no-anim{transition:none!important}
+.cat-carousel-grid.exit-left{opacity:0;transform:translateX(-28px)}
+.cat-carousel-grid.exit-right{opacity:0;transform:translateX(28px)}
 
 /* ===================== FILTER BAR ===================== */
 .filter-bar{
@@ -372,6 +382,16 @@ button{cursor:pointer;font-family:inherit}
 .price-now{font-size:14px;font-weight:600;color:#121212}
 .price-was{font-size:13px;font-weight:500;color:#999;text-decoration:line-through}
 .product-size{font-size:13px;color:#999}
+
+/* ===================== TOAST ===================== */
+#toast{
+  position:fixed;bottom:130px;left:50%;transform:translateX(-50%);
+  background:rgba(18,18,18,0.82);color:#fff;
+  font-size:13px;line-height:1.4;padding:10px 20px;border-radius:20px;
+  opacity:0;transition:opacity 0.22s;pointer-events:none;
+  z-index:1000;white-space:nowrap;
+}
+#toast.show{opacity:1}
 
 /* ===================== LOADING ===================== */
 .loading-row{
@@ -581,6 +601,7 @@ button{cursor:pointer;font-family:inherit}
 
 <!-- ==================== CATEGORY PANEL ==================== -->
 <div id="cat-panel"></div>
+<div id="toast"></div>
 
 <!-- ==================== CONTROLS ==================== -->
 <button id="refresh-btn" onclick="refreshImages()">↻ 이미지 새로고침</button>
@@ -614,19 +635,6 @@ const CAROUSEL_PAGES = [
     {label:'Suits & Blazers',      seed:'m-sui24'},
     {label:'Shirts',               seed:'m-shrt24'},
     {label:'Accessories',          seed:'m-acc24'},
-  ],
-  // Page 2 — Kids & Home
-  [
-    {label:"Girls' Clothing",      seed:'k-grl24'},
-    {label:"Boys' Clothing",       seed:'k-boy24'},
-    {label:'Baby & Toddler',       seed:'k-bby24'},
-    {label:'Shoes',                seed:'k-sho24'},
-    {label:'Accessories',          seed:'k-acc24'},
-    {label:'Home Decor',           seed:'h-dec24'},
-    {label:'Bedding',              seed:'h-bed24'},
-    {label:'Kitchen',              seed:'h-kit24'},
-    {label:'Bath',                 seed:'h-bat24'},
-    {label:'Storage',              seed:'h-sto24'},
   ],
 ];
 const CATEGORY_ITEMS = CAROUSEL_PAGES.flat();
@@ -773,7 +781,7 @@ function renderCarousel(containerId, page){
   el.innerHTML = items.map(item=>{
     const seed = SEEDS.cats[item.seed] || item.seed;
     const safeLabel = item.label.replace(/'/g,"\\'");
-    return `<button class="cat-carousel-item" onclick="carouselCatSelect('${variantId}','${safeLabel}',${page})">
+    return `<button class="cat-carousel-item" onclick="carouselCatSelect('${variantId}','${safeLabel}',${page})" title="Try selecting this category">
       <img class="cat-thumb" src="https://picsum.photos/seed/${seed}/130/172" loading="lazy" alt="${item.label}">
       <span class="cat-thumb-label">${item.label}</span>
     </button>`;
@@ -784,7 +792,8 @@ function renderCarousel(containerId, page){
     const prevBtn = wrap.querySelector('.cat-carousel-prev');
     const nextBtn = wrap.querySelector('.cat-carousel-next');
     if(prevBtn) prevBtn.classList.toggle('visible', page > 0);
-    if(nextBtn) nextBtn.style.opacity = page >= CAROUSEL_PAGES.length - 1 ? '0.25' : '1';
+    const atEnd = page >= CAROUSEL_PAGES.length - 1;
+    if(nextBtn){ nextBtn.style.opacity = atEnd ? '0.3' : '1'; nextBtn.style.pointerEvents = atEnd ? 'none' : ''; }
   }
 }
 
@@ -792,16 +801,28 @@ function carouselNext(btn){
   const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
   const cur = carouselPageState[grid.id] || 0;
   if(cur >= CAROUSEL_PAGES.length - 1) return;
-  grid.classList.add('fading');
-  setTimeout(()=>{ renderCarousel(grid.id, cur + 1); grid.classList.remove('fading'); }, 180);
+  grid.classList.add('exit-left');
+  setTimeout(()=>{
+    renderCarousel(grid.id, cur + 1);
+    grid.classList.add('no-anim','exit-right');
+    grid.classList.remove('exit-left');
+    grid.offsetHeight;
+    grid.classList.remove('no-anim','exit-right');
+  }, 200);
 }
 
 function carouselPrev(btn){
   const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
   const cur = carouselPageState[grid.id] || 0;
   if(cur <= 0) return;
-  grid.classList.add('fading');
-  setTimeout(()=>{ renderCarousel(grid.id, cur - 1); grid.classList.remove('fading'); }, 180);
+  grid.classList.add('exit-right');
+  setTimeout(()=>{
+    renderCarousel(grid.id, cur - 1);
+    grid.classList.add('no-anim','exit-left');
+    grid.classList.remove('exit-right');
+    grid.offsetHeight;
+    grid.classList.remove('no-anim','exit-left');
+  }, 200);
 }
 
 function renderAllCarousels(){
@@ -1067,6 +1088,15 @@ function catSelect(deptId, catId, catLabel, subLabel){
   closeCatPanel();
 }
 
+/* ==================== TOAST ==================== */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>{ t.classList.remove('show'); }, 2200);
+}
+
 /* ==================== BREADCRUMB HELPERS ==================== */
 function buildBreadcrumbHtml(variantId, deptLbl, deptId, catLbl, catId, subLabel){
   const hasCat    = !!(catLbl && catLbl !== deptLbl && catId);
@@ -1094,22 +1124,8 @@ function breadcrumbNav(variantId, level, deptId, catId){
   panelState.anchorBarId = variantId + '-filter-bar';
   panelState.anchorBtn   = document.getElementById(variantId + '-cat-btn');
   if(level === 'home'){
-    panelState.selectedDeptId   = null;
-    panelState.selectedCatId    = null;
-    panelState.selectedSubLabel = null;
-    const variantEl = document.getElementById(variantId);
-    if(variantEl){
-      const bc = variantEl.querySelector('.breadcrumb');
-      if(bc) bc.innerHTML = `<a href="#" onclick="breadcrumbNav('${variantId}','home');return false">Home</a>`;
-      const carousel   = variantEl.querySelector('.cat-carousel-wrap');
-      const subcatWrap = document.getElementById(variantId + '-subcat');
-      if(carousel) carousel.style.display = '';
-      if(subcatWrap) subcatWrap.classList.remove('active');
-    }
-    const filterLeftEl = document.getElementById(variantId + '-filter-left');
-    if(filterLeftEl) filterLeftEl.querySelectorAll('.filter-chip[data-type="category"]').forEach(c => c.remove());
-    const catBtn = document.getElementById(variantId + '-cat-btn');
-    if(catBtn) catBtn.classList.remove('is-active');
+    showToast('홈으로 이동합니다');
+    return;
   } else if(level === 'dept'){
     const dept = CAT_TREE.find(d => d.id === deptId);
     if(dept) catSelect(deptId, '', dept.label, 'All');
