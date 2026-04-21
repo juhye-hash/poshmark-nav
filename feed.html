@@ -386,6 +386,10 @@ button{cursor:pointer;font-family:inherit}
 .price-was{font-size:13px;font-weight:500;color:#999;text-decoration:line-through}
 .product-size{font-size:13px;color:#999}
 
+/* ===================== BREADCRUMB REFRESH FLASH ===================== */
+@keyframes bcFlash{0%,100%{opacity:1}40%{opacity:0.25}}
+.bc-flash{animation:bcFlash 0.35s ease}
+
 /* ===================== TOAST ===================== */
 #toast{
   position:fixed;bottom:130px;left:50%;transform:translateX(-50%);
@@ -1135,7 +1139,17 @@ function breadcrumbNav(variantId, level, deptId, catId, subLabel){
   if(level === 'home'){
     showToast('Prototype: Clicking Home in the breadcrumb navigates to the home screen.');
     return;
-  } else if(level === 'dept'){
+  }
+  // Flash + refresh product images
+  const variantEl = document.getElementById(variantId);
+  if(variantEl){
+    variantEl.classList.remove('bc-flash');
+    void variantEl.offsetWidth;
+    variantEl.classList.add('bc-flash');
+    setTimeout(()=>{ variantEl.classList.remove('bc-flash'); }, 380);
+  }
+  refreshImages();
+  if(level === 'dept'){
     const dept = CAT_TREE.find(d => d.id === deptId);
     if(dept) catSelect(deptId, '', dept.label, 'All');
   } else if(level === 'cat'){
