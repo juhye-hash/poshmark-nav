@@ -1117,25 +1117,19 @@ function buildBreadcrumbHtml(variantId, deptLbl, deptId, catLbl, catId, subLabel
   const hasCat    = !!(catLbl && catLbl !== deptLbl && catId);
   const hasSubcat = !!(subLabel && subLabel !== 'All');
   let html = `<a href="#" onclick="breadcrumbNav('${variantId}','home');return false">Home</a>`;
-  if(hasCat || hasSubcat){
+  if(deptLbl){
     html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','dept','${deptId}')">${deptLbl}</span>`;
-  } else if(deptLbl){
-    html += `<span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
   }
   if(hasCat){
-    if(hasSubcat){
-      html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','cat','${deptId}','${catId}')">${catLbl}</span>`;
-    } else {
-      html += `<span class="breadcrumb-sep">›</span><span>${catLbl}</span>`;
-    }
+    html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','cat','${deptId}','${catId}')">${catLbl}</span>`;
   }
   if(hasSubcat){
-    html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
+    html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-link" onclick="breadcrumbNav('${variantId}','subcat','${deptId}','${catId}','${subLabel}')">${subLabel}</span>`;
   }
   return html;
 }
 
-function breadcrumbNav(variantId, level, deptId, catId){
+function breadcrumbNav(variantId, level, deptId, catId, subLabel){
   panelState.anchorBarId = variantId + '-filter-bar';
   panelState.anchorBtn   = document.getElementById(variantId + '-cat-btn');
   if(level === 'home'){
@@ -1148,6 +1142,10 @@ function breadcrumbNav(variantId, level, deptId, catId){
     const dept = CAT_TREE.find(d => d.id === deptId);
     const cat  = dept && dept.cats.find(c => c.id === catId);
     if(cat) catSelect(deptId, catId, cat.label, 'All');
+  } else if(level === 'subcat'){
+    const dept = CAT_TREE.find(d => d.id === deptId);
+    const cat  = dept && dept.cats.find(c => c.id === catId);
+    if(cat) catSelect(deptId, catId, cat.label, subLabel);
   }
 }
 
