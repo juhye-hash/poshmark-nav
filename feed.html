@@ -255,7 +255,7 @@ button{cursor:pointer;font-family:inherit}
   transition:opacity 0.15s;
 }
 .cat-carousel-next{right:0}
-.cat-carousel-prev{left:0;opacity:0.3;pointer-events:none}
+.cat-carousel-prev{left:0;opacity:0;pointer-events:none}
 .cat-carousel-prev.visible{opacity:1;pointer-events:auto}
 .cat-carousel-grid{transition:opacity 0.2s ease,transform 0.2s ease}
 .cat-carousel-grid.no-anim{transition:none!important}
@@ -793,7 +793,7 @@ function renderCarousel(containerId, page){
     const nextBtn = wrap.querySelector('.cat-carousel-next');
     if(prevBtn) prevBtn.classList.toggle('visible', page > 0);
     const atEnd = page >= CAROUSEL_PAGES.length - 1;
-    if(nextBtn){ nextBtn.style.opacity = atEnd ? '0.3' : '1'; nextBtn.style.pointerEvents = atEnd ? 'none' : ''; }
+    if(nextBtn){ nextBtn.style.opacity = atEnd ? '0' : '1'; nextBtn.style.pointerEvents = atEnd ? 'none' : ''; }
   }
 }
 
