@@ -999,11 +999,8 @@ function catSelect(deptId, catId, catLabel, subLabel){
 
   const dept   = CAT_TREE.find(d=>d.id===deptId);
   const deptLbl = dept ? dept.label : '';
-  const display = subLabel==='All'
-    ? (catLabel || deptLbl)
-    : catLabel
-      ? `${catLabel} / ${subLabel}`
-      : `${deptLbl}: ${subLabel}`;
+  const finalSel = (subLabel && subLabel !== 'All') ? subLabel : (catLabel && catLabel !== deptLbl ? catLabel : null);
+  const display  = finalSel ? `${deptLbl} / ${finalSel}` : deptLbl;
 
   const barId = panelState.anchorBarId;
   const filterLeftEl = document.getElementById(barId.replace('filter-bar','filter-left'));
@@ -1227,8 +1224,8 @@ function subcatSelect(btn, variantId){
   const filterLeftEl = document.getElementById(variantId + '-filter-left');
   if(filterLeftEl){
     filterLeftEl.querySelectorAll('.filter-chip[data-type="category"]').forEach(c => c.remove());
-    const base    = catLbl || deptLbl;
-    const display = subLabel === 'All' ? base : `${base} / ${subLabel}`;
+    const finalSel2 = (subLabel && subLabel !== 'All') ? subLabel : catLbl;
+    const display   = finalSel2 ? `${deptLbl} / ${finalSel2}` : deptLbl;
     const divider = filterLeftEl.querySelector('.filter-divider');
     const chip = document.createElement('span');
     chip.className = 'filter-chip';
