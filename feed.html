@@ -1139,7 +1139,7 @@ function breadcrumbNav(variantId, level, deptId, catId){
   panelState.anchorBarId = variantId + '-filter-bar';
   panelState.anchorBtn   = document.getElementById(variantId + '-cat-btn');
   if(level === 'home'){
-    showToast('홈으로 이동합니다');
+    showToast('Prototype: Clicking Home in the breadcrumb navigates to the home screen.');
     return;
   } else if(level === 'dept'){
     const dept = CAT_TREE.find(d => d.id === deptId);
