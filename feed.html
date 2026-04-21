@@ -1157,6 +1157,27 @@ function subcatSelect(btn, variantId){
   if(!row) return;
   row.querySelectorAll('.subcat-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+
+  const subLabel = btn.querySelector('.subcat-label').textContent.trim();
+  panelState.selectedSubLabel = subLabel;
+
+  // Update breadcrumb
+  const variantEl = document.getElementById(variantId);
+  if(variantEl){
+    const bc = variantEl.querySelector('.breadcrumb');
+    if(bc){
+      const dept    = CAT_TREE.find(d => d.id === panelState.selectedDeptId);
+      const cat     = dept && dept.cats.find(c => c.id === panelState.selectedCatId);
+      const deptLbl = dept ? dept.label : '';
+      const catLbl  = cat  ? cat.label  : '';
+      let html = `<a href="#">Home</a><span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
+      if(catLbl && catLbl !== deptLbl)
+        html += `<span class="breadcrumb-sep">›</span><span>${catLbl}</span>`;
+      if(subLabel && subLabel !== 'All')
+        html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
+      bc.innerHTML = html;
+    }
+  }
 }
 
 function subcatNext(variantId){
