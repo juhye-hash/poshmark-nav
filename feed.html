@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poshmark — Feed Channel</title>
+<style>
+/* ===================== FONTS ===================== */
+@font-face {
+  font-family: 'Graphik';
+  font-weight: 400;
+  src: url('fonts/Graphik-Regular-Web.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Graphik';
+  font-weight: 500;
+  src: url('fonts/Graphik-Medium-Web.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Graphik';
+  font-weight: 600;
+  src: url('fonts/Graphik-Semibold-Web.woff2') format('woff2');
+}
+
+/* ===================== BASE ===================== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Graphik',-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  font-size:14px;color:#121212;background:#fff;min-width:1280px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+/* ===================== TOKENS ===================== */
+:root {
+  --black:         #121212;
+  --white:         #ffffff;
+  --divider:       #ececec;
+  --search-bg:     #f6f6f6;
+  --search-stroke: #e3e3e3;
+  --gray-300:      #717171;
+  --posh-live:     #ba4e41;
+}
+
+/* ===================== NAV ===================== */
+.nav-bar {
+  background: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--divider);
+}
+
+/* Mobile base (hidden on desktop) */
+.nav-middle-row {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  position: relative;
+}
+.nav-mobile-left  { display: flex; align-items: center; gap: 8px; }
+.nav-mobile-right { display: flex; align-items: center; }
+.nav-logo-desktop,
+.nav-search,
+.nav-right-desktop,
+.nav-submenu-row  { display: none; }
+
+/* Desktop ≥992px */
+@media (min-width: 992px) {
+  .nav-mobile-left, .nav-mobile-right { display: none; }
+  .nav-logo-desktop  { display: flex; align-items: center; flex-shrink: 0; }
+  .nav-right-desktop { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+  .nav-middle-row {
+    height: 80px;
+    border-bottom: none;
+    padding: 0 max(20px, calc((100vw - 1388px) / 2));
+  }
+  .nav-search {
+    display: flex; align-items: center;
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(370px, calc(104.67vw - 746.8px), 706px);
+    height: 44px;
+    background: var(--search-bg);
+    border: 1px solid var(--search-stroke);
+    border-radius: 60px;
+    padding: 0 14px 0 20px;
+    cursor: pointer;
+  }
+  .nav-submenu-row {
+    display: flex; align-items: center;
+    height: 48px;
+    border-top: 1px solid var(--divider);
+    padding: 0 20px;
+  }
+}
+
+/* Desktop ≥1067px: submenu padding jumps to 56px */
+@media (min-width: 1067px) {
+  .nav-submenu-row {
+    padding: 0 max(56px, calc((100vw - 1388px) / 2 + 56px));
+  }
+}
+
+/* Logo */
+.logo-desktop { width: 134px; height: 22px; display: block; }
+.logo-mobile  { width: 112px; height: 20px; display: block; }
+
+/* Hamburger */
+.icon-shopby { width: 24px; height: 24px; flex-shrink: 0; }
+
+/* Buttons */
+.btn-black-md {
+  height: 36px; padding: 0 14px;
+  background: var(--black); color: var(--white);
+  border: none; border-radius: 4px;
+  font-size: 14px; line-height: 19px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+}
+.btn-black-sm {
+  height: 32px; padding: 0 12px;
+  background: var(--black); color: var(--white);
+  border: none; border-radius: 4px;
+  font-size: 13px; line-height: 18px;
+  cursor: pointer; white-space: nowrap;
+}
+.text-sell-now {
+  font-size: 14px; line-height: 19px;
+  color: var(--black); white-space: nowrap; flex-shrink: 0;
+}
+
+/* Desktop icon row */
+.nav-icons { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.icon-28 {
+  width: 28px; height: 28px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.avatar-28 {
+  width: 22px; height: 22px; border-radius: 50%; overflow: hidden; flex-shrink: 0; cursor: pointer;
+}
+.avatar-28 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Mobile icon row */
+.mobile-icons { display: flex; align-items: center; gap: 10px; }
+.icon-24 { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+.avatar-24 { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; flex-shrink: 0; cursor: pointer; }
+.avatar-24 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Search internals */
+.search-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.search-left  { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
+.search-cat   { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.search-cat span { font-size: 15px; line-height: 20px; color: var(--black); white-space: nowrap; }
+.search-div   { width: 1px; height: 12px; flex-shrink: 0; background: #e3e3e3; }
+.search-ph    { font-size: 15px; line-height: 20px; color: var(--gray-300); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.search-icon  { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+
+/* Submenu */
+.nav-submenu-items { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.sub-link {
+  font-size: 15px; line-height: 20px; color: var(--black);
+  text-decoration: none; white-space: nowrap; flex-shrink: 0; padding: 0 1px;
+}
+.sub-link:hover { text-decoration: underline; }
+.sub-link.active { font-weight: 600; }
+.sub-live { display: flex; align-items: center; gap: 2px; text-decoration: none; flex-shrink: 0; }
+.sub-live span { font-size: 15px; line-height: 20px; color: var(--posh-live); white-space: nowrap; }
+
+/* ===================== VARIANTS ===================== */
+.variant-page{display:none}
+.variant-page.active{display:block}
+
+/* ===================== CONTENT ===================== */
+.page-wrap{width:1388px;margin:0 auto;padding:48px 0 120px}
+
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:#717171;margin-bottom:12px;
+}
+.breadcrumb a{color:#717171}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb-sep{font-size:10px;color:#aaa}
+
+.page-title{
+  font-family:'Nantes', serif;
+  font-size:28px;font-weight:600;color:#121212;
+  line-height:1.25;margin-bottom:32px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* ===================== CATEGORY CAROUSEL ===================== */
+.cat-carousel-wrap{position:relative;margin-bottom:38px}
+.cat-carousel-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  grid-template-rows:repeat(2,86px);
+  gap:12px;
+}
+.cat-carousel-item{
+  position:relative;height:86px;
+  background:#f9f9f9;border:none;
+  cursor:pointer;overflow:hidden;
+  text-align:left;
+}
+.cat-carousel-item:hover .cat-thumb-label{text-decoration:underline}
+.cat-thumb{
+  position:absolute;left:0;top:0;
+  width:65px;height:86px;
+  object-fit:cover;display:block;
+}
+.cat-thumb-label{
+  position:absolute;
+  left:calc(50% - 48px);
+  top:50%;transform:translateY(-50%);
+  font-size:14px;font-weight:500;color:#121212;
+  line-height:19px;white-space:nowrap;
+}
+.cat-carousel-next{
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid #ddd;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.17);font-size:14px;
+}
+.cat-carousel-next:hover{border-color:#bbb;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+
+/* ===================== FILTER BAR ===================== */
+.filter-bar{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  height:34px;margin-bottom:24px;
+  gap:12px;
+}
+.filter-left{
+  display:flex;align-items:center;gap:6px;flex-wrap:nowrap;
+  overflow-x:auto;
+}
+.filter-left::-webkit-scrollbar{display:none}
+.filter-divider{
+  width:1px;height:21px;background:#ccc;
+  flex-shrink:0;margin:0 4px;
+}
+.filter-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  height:34px;padding:0 11px 0 14px;
+  border:1px solid #ccc;border-radius:100px;
+  font-size:13px;color:#121212;
+  background:none;white-space:nowrap;flex-shrink:0;
+  transition:border-color .15s;
+}
+.filter-pill:hover{border-color:#999}
+.filter-pill.is-active{
+  border-color:#121212;background:rgba(0,0,0,.03);
+  font-weight:500;
+}
+.filter-pill-icon{
+  width:34px;padding:0;justify-content:center;
+}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  height:34px;padding:0 10px 0 14px;
+  border:1px solid rgba(97,7,34,.2);border-radius:100px;
+  background:rgba(252,219,215,.6);
+  font-size:13px;font-weight:500;color:#ba4e41;
+  white-space:nowrap;flex-shrink:0;cursor:pointer;
+}
+.filter-chip:hover{background:rgba(252,219,215,.85)}
+.chip-x{
+  width:14px;height:14px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;line-height:1;color:#ba4e41;
+  background:rgba(186,78,65,.12);
+}
+
+.sort-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:34px;padding:0 11px 0 14px;
+  border:1px solid #ccc;border-radius:100px;
+  font-size:13px;color:#121212;
+  background:none;white-space:nowrap;flex-shrink:0;
+}
+.sort-btn:hover{border-color:#999}
+
+/* ===================== PRODUCT GRID ===================== */
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(6,213px);
+  gap:32px 22px;
+}
+.product-card{
+  display:flex;flex-direction:column;gap:8px;cursor:pointer;
+}
+.product-card:hover .product-img-wrap img{
+  transform:scale(1.03);
+}
+.product-img-wrap{
+  width:213px;height:284px;
+  background:#f2f2f2;overflow:hidden;
+  position:relative;flex-shrink:0;
+}
+.product-img-wrap img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .3s ease;
+}
+.badge-free{
+  position:absolute;bottom:8px;left:8px;
+  background:#121212;color:#fff;
+  font-size:10px;font-weight:600;
+  padding:3px 7px 3px 5px;
+  display:flex;align-items:center;gap:3px;
+}
+.badge-heart{
+  position:absolute;top:8px;right:8px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(246,246,246,.75);
+  border:1px solid rgba(255,255,255,.6);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+}
+.badge-heart:hover{background:rgba(246,246,246,.95)}
+.product-info{padding:0 4px;display:flex;flex-direction:column;gap:4px}
+.product-title-row{
+  display:flex;align-items:flex-start;gap:4px;width:100%;
+}
+.badge-ad{
+  flex-shrink:0;border:1px solid #e3e3e3;
+  font-size:10px;font-weight:500;color:#121212;
+  padding:2px 4px;line-height:10px;white-space:nowrap;
+}
+.badge-nwt{
+  flex-shrink:0;background:#2b6cb0;color:#fff;
+  font-size:10px;font-weight:600;
+  padding:2px 4px;line-height:10px;white-space:nowrap;
+}
+.product-name{
+  font-size:15px;color:#121212;line-height:1.33;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  min-width:0;flex:1;
+}
+.product-price-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;
+}
+.product-prices{display:flex;align-items:baseline;gap:5px}
+.price-now{font-size:15px;font-weight:600;color:#121212}
+.price-was{font-size:15px;font-weight:500;color:#999;text-decoration:line-through}
+.product-size{font-size:15px;color:#999}
+
+/* ===================== LOADING ===================== */
+.loading-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;padding:40px 0 20px;
+  font-size:15px;color:#717171;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-spin{
+  width:22px;height:22px;
+  border:2px solid #e0e0e0;
+  border-top-color:#121212;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+/* ===================== CATEGORY PANEL ===================== */
+#cat-panel{
+  position:fixed;width:283px;
+  max-height:350px;overflow-y:auto;
+  background:#fff;border-radius:8px;
+  border:1px solid #ececec;
+  box-shadow:0px 18px 55px 0px rgba(0,0,0,.15);
+  z-index:500;display:none;
+}
+
+/* ===================== BOTTOM CONTROLS ===================== */
+#refresh-btn{
+  position:fixed;bottom:76px;right:24px;
+  background:#121212;color:#fff;border:none;
+  border-radius:24px;padding:11px 18px;
+  font-size:13px;font-weight:500;z-index:200;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+  transition:background .15s;
+}
+#refresh-btn:hover{background:#333}
+
+.variant-switcher{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:rgba(18,18,18,.88);backdrop-filter:blur(8px);
+  border-radius:8px;padding:6px 10px;
+  display:flex;gap:6px;z-index:300;
+}
+.vbtn{
+  background:transparent;border:1px solid rgba(255,255,255,.25);
+  color:rgba(255,255,255,.65);border-radius:4px;
+  padding:5px 14px;font-size:12px;
+}
+.vbtn.on{background:#fff;color:#121212;border-color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ==================== NAV ==================== -->
+<header class="nav-bar">
+
+  <!-- Middle Row -->
+  <div class="nav-middle-row">
+
+    <!-- MOBILE LEFT -->
+    <div class="nav-mobile-left">
+      <div class="icon-shopby">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#121212" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <svg class="logo-mobile" viewBox="0 0 156 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M46.2131 7.92792C42.181 7.02936 41.6785 6.162 41.6879 5.06376C41.7004 3.78456 43.0267 2.79552 45.1676 2.79552C47.0526 2.79552 48.6473 3.46944 50.3232 4.78608L52.0927 2.5428C50.4886 1.21992 48.1043 0 45.2675 0C41.2135 0 38.6419 2.09352 38.6014 5.23536C38.5546 8.68608 41.1168 9.9528 45.0521 10.7328C48.9875 11.5128 49.2528 12.4738 49.2965 13.5002C49.3589 14.9448 47.839 15.834 45.8105 15.834C43.5104 15.834 41.485 14.9292 39.5938 13.2974L37.6526 15.4939C39.8247 17.4439 42.3089 18.7169 45.4485 18.7169C49.9331 18.7169 52.4797 16.433 52.3954 13.4066C52.3112 10.3802 50.4231 8.86704 46.2037 7.9248L46.2131 7.92792Z" fill="#610722"/><path d="M26.2728 0C21.1016 0 16.9103 4.19016 16.9103 9.36C16.9103 14.5298 21.1016 18.72 26.2728 18.72C31.444 18.72 35.6353 14.5298 35.6353 9.36C35.6353 4.19016 31.444 0 26.2728 0ZM26.2728 15.8839C22.7962 15.8839 19.9812 12.9636 19.9812 9.36C19.9812 5.7564 22.7993 2.83608 26.2728 2.83608C29.7463 2.83608 32.5644 5.7564 32.5644 9.36C32.5644 12.9636 29.7463 15.8839 26.2728 15.8839Z" fill="#610722"/><path d="M7.19039 0.318254H0V18.4018H3.01472V12.3739H6.85334C11.3536 12.3739 14.3714 9.91537 14.3714 6.26185C14.3714 2.60833 11.5564 0.318254 7.19039 0.318254ZM3.01472 3.10129H7.03435C8.32637 3.10129 11.3317 3.41641 11.3317 6.33673C11.3317 8.33041 9.60278 9.61897 6.93136 9.61897H3.01472V3.10129Z" fill="#610722"/><path d="M85.2169 9.00745L79.3123 0.318254H76.1977V18.4018H79.2124V5.28529L85.1763 13.9215H85.2013L91.2182 5.23225V18.4018H94.2329V0.318254H91.1183L85.2169 9.00745Z" fill="#610722"/><path d="M68.5405 7.90921H59.228V0.318254H56.2102V18.4018H59.228V10.7141H68.5405V18.4018H71.5553V0.318254H68.5405V7.90921Z" fill="#610722"/><path d="M134.386 5.91865C134.386 2.56777 131.589 0.318254 127.426 0.318254H119.24V18.4018H122.255V11.7655H126.615L131.795 18.4018H135.547L129.917 11.2383C132.728 10.4895 134.379 8.54569 134.379 5.91865H134.386ZM131.34 5.99353C131.34 7.83745 129.732 9.03241 127.245 9.03241H122.258V3.10129H127.27C129.857 3.10129 131.34 4.15585 131.34 5.99353Z" fill="#610722"/><path d="M147.348 8.32417L155.555 0.318254H151.517L141.961 9.72817V0.318254H138.943V18.4018H141.961V13.5252L145.225 10.3615L151.898 18.4018H155.727L147.351 8.32105L147.348 8.32417Z" fill="#610722"/><path d="M108.097 0.318254H105.463L96.9027 18.4018H100.08L102.199 13.8871H111.287L113.381 18.4018H116.661L108.097 0.318254ZM103.456 11.1571L106.752 4.12465L110.029 11.1571H103.456Z" fill="#610722"/></svg>
+    </div>
+
+    <!-- MOBILE RIGHT -->
+    <div class="nav-mobile-right">
+      <button class="btn-black-sm" id="mob-login-btn">Log In</button>
+      <div class="mobile-icons" id="mob-icons" style="display:none">
+        <div class="icon-24">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15.8232 5.62207C17.7645 5.62227 19.413 7.00687 19.8604 8.79883L19.9004 8.97363C20.322 11.0522 19.3514 13.1609 17.8779 14.9219L17.5771 15.2686C17.1407 15.7545 16.6669 16.2076 16.1592 16.6191V16.6201C15.16 17.4311 14.0478 18.1014 13.1768 18.5723C12.7432 18.8066 12.3731 18.989 12.1133 19.1123C12.073 19.1314 12.0348 19.1478 12 19.1641C11.9652 19.1478 11.927 19.1314 11.8867 19.1123C11.6269 18.9889 11.2568 18.8067 10.8232 18.5723C9.95216 18.1013 8.84008 17.4299 7.84082 16.6191L7.4668 16.3027C7.2215 16.0868 6.9843 15.8616 6.75684 15.627L6.42285 15.2686C4.83485 13.4988 3.72174 11.3304 4.0625 9.18164L4.09961 8.97363C4.47971 7.09794 6.17207 5.62229 8.17676 5.62207C9.48335 5.62207 10.6501 6.17052 11.4502 7.0332L12 7.62598L12.5498 7.0332C13.3499 6.17052 14.5167 5.62207 15.8232 5.62207Z" stroke="#121212" stroke-width="1.5"/></svg>
+        </div>
+        <div class="icon-24">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.9062 19.708C15.3204 19.708 15.6561 20.0439 15.6562 20.458C15.6562 20.8722 15.3204 21.208 14.9062 21.208H10.1972C9.78303 21.208 9.44725 20.8722 9.44725 20.458C9.44737 20.0439 9.78311 19.708 10.1972 19.708H14.9062ZM12.5517 3.81543C16.3683 3.81543 19.3103 7.28106 19.3105 11.3574V11.3662L19.289 13.2578C19.2911 14.4594 19.716 15.4632 20.1582 16.1494C20.4269 16.5664 20.4 17.0581 20.2685 17.4072C20.1435 17.7393 19.7973 18.2285 19.168 18.2285H5.93651C5.29719 18.2285 4.95179 17.7257 4.83006 17.3926C4.70164 17.041 4.67763 16.5409 4.95897 16.1221L5.12986 15.8496C5.52319 15.1818 5.85838 14.2886 5.85838 13.249V13.2412L5.87986 11.251C5.88387 7.23247 8.78583 3.81543 12.5517 3.81543ZM12.5517 5.31543C9.77913 5.31543 7.37986 7.88804 7.37986 11.2598V11.2676L7.35838 13.2568C7.35665 14.6802 6.87589 15.8725 6.34861 16.7285H18.7558C18.2499 15.8706 17.789 14.6749 17.789 13.249V13.2402L17.8105 11.3574C17.8103 7.93148 15.3724 5.31543 12.5517 5.31543Z" fill="#121212"/></svg>
+        </div>
+        <div class="avatar-24" style="background:#e0e0e0;border-radius:50%"></div>
+      </div>
+    </div>
+
+    <!-- DESKTOP LOGO -->
+    <div class="nav-logo-desktop">
+      <a href="#">
+        <svg class="logo-desktop" viewBox="0 0 156 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M46.2131 7.92792C42.181 7.02936 41.6785 6.162 41.6879 5.06376C41.7004 3.78456 43.0267 2.79552 45.1676 2.79552C47.0526 2.79552 48.6473 3.46944 50.3232 4.78608L52.0927 2.5428C50.4886 1.21992 48.1043 0 45.2675 0C41.2135 0 38.6419 2.09352 38.6014 5.23536C38.5546 8.68608 41.1168 9.9528 45.0521 10.7328C48.9875 11.5128 49.2528 12.4738 49.2965 13.5002C49.3589 14.9448 47.839 15.834 45.8105 15.834C43.5104 15.834 41.485 14.9292 39.5938 13.2974L37.6526 15.4939C39.8247 17.4439 42.3089 18.7169 45.4485 18.7169C49.9331 18.7169 52.4797 16.433 52.3954 13.4066C52.3112 10.3802 50.4231 8.86704 46.2037 7.9248L46.2131 7.92792Z" fill="#610722"/><path d="M26.2728 0C21.1016 0 16.9103 4.19016 16.9103 9.36C16.9103 14.5298 21.1016 18.72 26.2728 18.72C31.444 18.72 35.6353 14.5298 35.6353 9.36C35.6353 4.19016 31.444 0 26.2728 0ZM26.2728 15.8839C22.7962 15.8839 19.9812 12.9636 19.9812 9.36C19.9812 5.7564 22.7993 2.83608 26.2728 2.83608C29.7463 2.83608 32.5644 5.7564 32.5644 9.36C32.5644 12.9636 29.7463 15.8839 26.2728 15.8839Z" fill="#610722"/><path d="M7.19039 0.318254H0V18.4018H3.01472V12.3739H6.85334C11.3536 12.3739 14.3714 9.91537 14.3714 6.26185C14.3714 2.60833 11.5564 0.318254 7.19039 0.318254ZM3.01472 3.10129H7.03435C8.32637 3.10129 11.3317 3.41641 11.3317 6.33673C11.3317 8.33041 9.60278 9.61897 6.93136 9.61897H3.01472V3.10129Z" fill="#610722"/><path d="M85.2169 9.00745L79.3123 0.318254H76.1977V18.4018H79.2124V5.28529L85.1763 13.9215H85.2013L91.2182 5.23225V18.4018H94.2329V0.318254H91.1183L85.2169 9.00745Z" fill="#610722"/><path d="M68.5405 7.90921H59.228V0.318254H56.2102V18.4018H59.228V10.7141H68.5405V18.4018H71.5553V0.318254H68.5405V7.90921Z" fill="#610722"/><path d="M134.386 5.91865C134.386 2.56777 131.589 0.318254 127.426 0.318254H119.24V18.4018H122.255V11.7655H126.615L131.795 18.4018H135.547L129.917 11.2383C132.728 10.4895 134.379 8.54569 134.379 5.91865H134.386ZM131.34 5.99353C131.34 7.83745 129.732 9.03241 127.245 9.03241H122.258V3.10129H127.27C129.857 3.10129 131.34 4.15585 131.34 5.99353Z" fill="#610722"/><path d="M147.348 8.32417L155.555 0.318254H151.517L141.961 9.72817V0.318254H138.943V18.4018H141.961V13.5252L145.225 10.3615L151.898 18.4018H155.727L147.351 8.32105L147.348 8.32417Z" fill="#610722"/><path d="M108.097 0.318254H105.463L96.9027 18.4018H100.08L102.199 13.8871H111.287L113.381 18.4018H116.661L108.097 0.318254ZM103.456 11.1571L106.752 4.12465L110.029 11.1571H103.456Z" fill="#610722"/></svg>
+      </a>
+    </div>
+
+    <!-- DESKTOP SEARCH (absolute-centered) -->
+    <div class="nav-search">
+      <div class="search-inner">
+        <div class="search-left">
+          <div class="search-cat">
+            <span>Listings</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><path d="M9.5 4.5L6 8L2.5 4.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="search-div"></div>
+          <span class="search-ph">What are you looking for?</span>
+        </div>
+        <div class="search-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="#121212" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="#121212" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKTOP RIGHT -->
+    <div class="nav-right-desktop">
+      <!-- Logged-out -->
+      <div id="desk-out" style="display:flex;align-items:center;gap:20px">
+        <span class="text-sell-now">Sell Now</span>
+        <button class="btn-black-md">Log in / Sign Up</button>
+      </div>
+      <!-- Logged-in (hidden) -->
+      <div id="desk-in" style="display:none;align-items:center;gap:20px">
+        <div class="nav-icons">
+          <div class="icon-28">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M16.9329 10.3283V7.75474C16.9329 6.04915 15.5503 4.6665 13.8447 4.6665C12.1391 4.6665 10.7564 6.04915 10.7564 7.75474V10.3283M7.60581 22.1665H20.0835C21.1861 22.1665 22.08 21.2893 22.08 20.2072L20.801 9.81354C20.801 8.73143 19.9072 7.85421 18.8046 7.85421H8.63522C7.53262 7.85421 6.63879 8.73143 6.63879 9.81354L5.60938 20.2072C5.60938 21.2893 6.50321 22.1665 7.60581 22.1665Z" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="icon-28">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M18.3486 6.11914C20.6791 6.11914 22.6476 7.84033 23.0908 10.0322C23.6128 12.6148 22.2949 15.2198 20.4219 17.3154C20.0467 17.7347 19.6474 18.1332 19.2256 18.5059L18.7959 18.8701C17.6518 19.8019 16.3802 20.5718 15.3857 21.1113C14.8905 21.38 14.4679 21.589 14.1709 21.7305C14.1073 21.7608 14.0486 21.7866 13.9971 21.8105C13.9459 21.7867 13.8882 21.7605 13.8252 21.7305C13.5282 21.5889 13.1057 21.3801 12.6104 21.1113C11.6158 20.5717 10.3444 19.8017 9.2002 18.8701C8.61786 18.3965 8.0745 17.8745 7.57422 17.3154C5.70057 15.22 4.38237 12.6142 4.9043 10.0322C5.34687 7.84061 7.3162 6.11914 9.64746 6.11914C11.1629 6.11928 12.5173 6.75742 13.4473 7.76367L13.998 8.35938L14.5488 7.76367C15.4788 6.75736 16.8331 6.1192 18.3486 6.11914Z" stroke="#121212" stroke-width="1.5"/></svg>
+          </div>
+          <div class="icon-28">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M17.3816 23.0879C17.7956 23.0881 18.1316 23.4238 18.1316 23.8379C18.1313 24.2518 17.7955 24.5877 17.3816 24.5879H11.906C11.4919 24.5879 11.1562 24.2519 11.156 23.8379C11.156 23.4237 11.4918 23.0879 11.906 23.0879H17.3816ZM14.6433 4.60742C19.0001 4.60759 22.3806 8.5687 22.3806 13.2559V13.2646L22.3562 15.4629C22.3581 16.8897 22.8616 18.0807 23.3855 18.8936C23.6718 19.3379 23.6457 19.8672 23.5026 20.2471C23.366 20.6098 22.9958 21.1219 22.3366 21.1221H6.95187C6.2822 21.1221 5.91315 20.5949 5.77999 20.2305C5.6401 19.8474 5.61692 19.3094 5.91671 18.8633L6.11886 18.541C6.58484 17.7499 6.98304 16.6901 6.98312 15.4551V15.4463L7.00753 13.1328C7.01146 8.5126 10.3451 4.60769 14.6433 4.60742ZM14.6433 6.10742C11.3385 6.10769 8.50771 9.16743 8.50753 13.1406V13.1494L8.48312 15.4629C8.48117 17.196 7.85855 18.6316 7.20968 19.6221H22.0739C21.4519 18.6296 20.8562 17.1908 20.8562 15.4551V15.4463L20.8816 13.2559H20.8806C20.8806 9.2191 18.0042 6.1076 14.6433 6.10742Z" fill="#121212"/></svg>
+          </div>
+          <div class="icon-28">
+            <div class="avatar-28" style="background:#d0d0d0"></div>
+          </div>
+        </div>
+        <button class="btn-black-md">Sell Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submenu Row -->
+  <div class="nav-submenu-row">
+    <div class="nav-submenu-items">
+      <a href="#" class="sub-link active">Women</a>
+      <a href="#" class="sub-link">Men</a>
+      <a href="#" class="sub-link">Kids</a>
+      <a href="#" class="sub-link">Home</a>
+      <a href="#" class="sub-link">Pets</a>
+      <a href="#" class="sub-link">Electronics</a>
+      <a href="#" class="sub-link">Beauty</a>
+      <a href="#" class="sub-link">Plus</a>
+      <a href="#" class="sub-link">Petite</a>
+      <a href="#" class="sub-link">Trending</a>
+      <a href="#" class="sub-link">Brand</a>
+      <a href="#" class="sub-live">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.597656 9.02714V4.43052M6.72649 12.8577V0.599998M3.66207 10.5594V2.89831M12.8553 4.43052V9.02714M9.79091 2.89831L9.79091 10.5594" stroke="#BA4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Posh Live</span>
+      </a>
+    </div>
+  </div>
+
+</header>
+
+<!-- ==================== VARIANT PAGES ==================== -->
+
+<!-- ======= VARIANT 1: Default (no carousel) ======= -->
+<div class="variant-page" id="v1">
+  <div class="page-wrap">
+    <div class="breadcrumb">
+      <a href="#">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Women</span>
+    </div>
+    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <div class="filter-bar" id="v1-filter-bar">
+      <div class="filter-left" id="v1-filter-left">
+        <button class="filter-pill filter-pill-icon" title="Search">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="filter-pill is-active" onclick="toggleCatPanel(this,'v1-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      </div>
+      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="product-grid" id="v1-grid"></div>
+    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
+  </div>
+</div>
+
+<!-- ======= VARIANT 2: With category carousel ======= -->
+<div class="variant-page" id="v2">
+  <div class="page-wrap">
+    <div class="breadcrumb">
+      <a href="#">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Women</span>
+    </div>
+    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <!-- Category Carousel -->
+    <div class="cat-carousel-wrap">
+      <div class="cat-carousel-grid" id="v2-cat-carousel"></div>
+      <button class="cat-carousel-next">›</button>
+    </div>
+    <div class="filter-bar" id="v2-filter-bar">
+      <div class="filter-left" id="v2-filter-left">
+        <button class="filter-pill filter-pill-icon" title="Search">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="filter-pill" onclick="toggleCatPanel(this,'v2-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      </div>
+      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="product-grid" id="v2-grid"></div>
+    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
+  </div>
+</div>
+
+<!-- ======= VARIANT 3: With sidebar ======= -->
+<div class="variant-page" id="v3">
+  <div style="display:flex;max-width:1388px;margin:0 auto;padding:48px 0 120px;gap:32px">
+    <!-- Sidebar -->
+    <aside style="width:220px;flex-shrink:0">
+      <div style="font-size:16px;font-weight:600;margin-bottom:16px">Filters</div>
+      <div style="border-top:1px solid #ececec">
+        <details open style="padding:16px 0;border-bottom:1px solid #ececec">
+          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
+            Department <span>▾</span>
+          </summary>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked> Women</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Men</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Kids</label>
+          </div>
+        </details>
+        <details style="padding:16px 0;border-bottom:1px solid #ececec">
+          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
+            Category <span>›</span>
+          </summary>
+        </details>
+        <details style="padding:16px 0;border-bottom:1px solid #ececec">
+          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
+            Brand <span>›</span>
+          </summary>
+        </details>
+        <details style="padding:16px 0;border-bottom:1px solid #ececec">
+          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
+            Size <span>›</span>
+          </summary>
+        </details>
+        <details style="padding:16px 0;border-bottom:1px solid #ececec">
+          <summary style="font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;list-style:none">
+            Price <span>›</span>
+          </summary>
+        </details>
+      </div>
+    </aside>
+    <!-- Main -->
+    <div style="flex:1;min-width:0">
+      <div class="breadcrumb">
+        <a href="#">Home</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>Women</span>
+      </div>
+      <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+      <div class="filter-bar" id="v3-filter-bar">
+        <div class="filter-left" id="v3-filter-left">
+          <button class="filter-pill filter-pill-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </button>
+          <button class="filter-pill" onclick="toggleCatPanel(this,'v3-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+          <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+          <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+          <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+          <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        </div>
+        <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="product-grid" id="v3-grid" style="grid-template-columns:repeat(5,1fr)"></div>
+      <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= VARIANT 4: My Size active ======= -->
+<div class="variant-page" id="v4">
+  <div class="page-wrap">
+    <div class="breadcrumb">
+      <a href="#">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Women</span>
+    </div>
+    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <div class="cat-carousel-wrap">
+      <div class="cat-carousel-grid" id="v4-cat-carousel"></div>
+      <button class="cat-carousel-next">›</button>
+    </div>
+    <div class="filter-bar" id="v4-filter-bar">
+      <div class="filter-left" id="v4-filter-left">
+        <button class="filter-pill filter-pill-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="filter-pill" onclick="toggleCatPanel(this,'v4-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill is-active">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <div class="filter-divider"></div>
+        <span class="filter-chip" data-type="category" onclick="removeChip(this,'v4-filter-left')">Women <span class="chip-x">✕</span></span>
+        <span class="filter-chip" onclick="removeChip(this,'v4-filter-left')">US 6 <span class="chip-x">✕</span></span>
+      </div>
+      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="product-grid" id="v4-grid"></div>
+    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
+  </div>
+</div>
+
+<!-- ======= VARIANT 5: Latest design (main) ======= -->
+<div class="variant-page active" id="v5">
+  <div class="page-wrap">
+    <div class="breadcrumb">
+      <a href="#">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Women</span>
+    </div>
+    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <!-- Category Carousel -->
+    <div class="cat-carousel-wrap">
+      <div class="cat-carousel-grid" id="v5-cat-carousel"></div>
+      <button class="cat-carousel-next">›</button>
+    </div>
+    <!-- Filter Bar -->
+    <div class="filter-bar" id="v5-filter-bar">
+      <div class="filter-left" id="v5-filter-left">
+        <button class="filter-pill filter-pill-icon" title="Search">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#121212" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="filter-pill is-active" id="v5-cat-btn" onclick="toggleCatPanel(this,'v5-filter-bar')">Category <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#121212" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Brand <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Size <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <div class="filter-divider"></div>
+        <!-- Active filter chip (Women) -->
+        <span class="filter-chip" data-type="category" onclick="removeChip(this,'v5-filter-left')">Women <span class="chip-x">✕</span></span>
+      </div>
+      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+    </div>
+    <!-- Product Grid -->
+    <div class="product-grid" id="v5-grid"></div>
+    <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
+  </div>
+</div>
+
+<!-- ==================== CATEGORY PANEL ==================== -->
+<div id="cat-panel"></div>
+
+<!-- ==================== CONTROLS ==================== -->
+<button id="refresh-btn" onclick="refreshImages()">↻ 이미지 새로고침</button>
+
+<div class="variant-switcher">
+  <button class="vbtn" onclick="switchVariant(1)">V1</button>
+  <button class="vbtn" onclick="switchVariant(2)">V2</button>
+  <button class="vbtn" onclick="switchVariant(3)">V3</button>
+  <button class="vbtn" onclick="switchVariant(4)">V4</button>
+  <button class="vbtn on" onclick="switchVariant(5)">V5 (New)</button>
+</div>
+
+<script>
+/* ==================== DATA ==================== */
+const CATEGORY_ITEMS = [
+  {label:'Accessories',    seed:'acc2024'},
+  {label:'Jackets & Coats',seed:'jac2024'},
+  {label:'Tops',           seed:'top2024'},
+  {label:'Intimates & Sleepwear', seed:'int2024'},
+  {label:'Jeans',          seed:'jns2024'},
+  {label:'Pants & Jumpsuits', seed:'pnt2024'},
+  {label:'Dresses',        seed:'drs2024'},
+  {label:'Camisoles',      seed:'cam2024'},
+  {label:'Bags',           seed:'bag2024'},
+  {label:'Shirts',         seed:'sht2024'},
+];
+
+// Category panel data: departments → categories → subcategories
+const CAT_TREE = [
+  { id:'women', label:'Women', cats:[
+    { id:'w-acc', label:'Accessories', subs:['All','Belts','Eyewear','Gloves & Mittens','Hair Accessories','Hats','Jewelry','Scarves & Wraps','Sunglasses','Wallets'] },
+    { id:'w-bag', label:'Bags', subs:['All','Backpacks','Clutches & Evening Bags','Crossbody Bags','Handbags','Mini Bags','Shoulder Bags','Totes','Wristlets'] },
+    { id:'w-bot', label:'Bottoms', subs:['All','Capris','Leggings','Shorts','Skirts'] },
+    { id:'w-drs', label:'Dresses', subs:['All','Casual','Formal / Evening','Mini','Midi','Maxi','Slip Dresses'] },
+    { id:'w-jac', label:'Jackets & Coats', subs:['All','Capes','Denim','Down & Puffer','Fur & Faux Fur','Leather & Faux Leather','Parkas','Rain Coats','Trench Coats','Vests'] },
+    { id:'w-jns', label:'Jeans', subs:['All','Boot Cut','Flare & Wide Leg','High Rise','Jeggings','Skinny','Slim','Straight Leg'] },
+    { id:'w-jmp', label:'Jumpsuits & Rompers', subs:['All','Jumpsuits','Rompers'] },
+    { id:'w-top', label:'Tops', subs:['All','Blouses','Bodysuits','Button Down Shirts','Camis','Crop Tops','Sweaters','Sweatshirts & Hoodies','T-Shirts','Tank Tops','Tunics'] },
+    { id:'w-swm', label:'Swimwear', subs:['All','Bikinis','One-Pieces','Rash Guards','Swim Cover-Ups'] },
+    { id:'w-ath', label:'Activewear', subs:['All','Bras & Sports Bras','Hoodies','Jackets','Leggings','Shorts','Skirts','Sweatpants','Tops'] },
+  ]},
+  { id:'men', label:'Men', cats:[
+    { id:'m-acc', label:'Accessories', subs:['All','Belts','Glasses','Hats','Jewelry','Scarves','Sunglasses','Ties','Wallets'] },
+    { id:'m-bag', label:'Bags', subs:['All','Backpacks','Briefcases','Duffels','Messenger Bags'] },
+    { id:'m-jac', label:'Jackets & Coats', subs:['All','Denim','Down & Puffer','Leather','Rain Coats','Windbreakers'] },
+    { id:'m-jns', label:'Jeans', subs:['All','Boot Cut','Relaxed','Slim','Straight Leg'] },
+    { id:'m-sut', label:'Suits & Blazers', subs:['All','Blazers','Suits','Vests'] },
+    { id:'m-top', label:'Tops', subs:['All','Button Down Shirts','Graphic Tees','Hoodies & Sweatshirts','Polos','Tank Tops','T-Shirts'] },
+    { id:'m-bot', label:'Bottoms', subs:['All','Shorts','Sweatpants & Joggers','Trousers'] },
+  ]},
+  { id:'kids', label:'Kids', cats:[
+    { id:'k-boy', label:'Boys', subs:['All','Tops','Bottoms','Outerwear','Shoes'] },
+    { id:'k-grl', label:'Girls', subs:['All','Tops','Dresses','Bottoms','Outerwear'] },
+    { id:'k-bby', label:'Baby', subs:['All','Tops','Bottoms','Onesies','Sets'] },
+  ]},
+  { id:'home', label:'Home', cats:[
+    { id:'h-art', label:'Art', subs:['All','Paintings','Prints','Photography'] },
+    { id:'h-dec', label:'Decor', subs:['All','Candles','Frames','Mirrors','Vases'] },
+    { id:'h-bed', label:'Bedding', subs:['All','Duvet Covers','Pillows','Sheets'] },
+    { id:'h-bat', label:'Bath', subs:['All','Bath Mats','Towels','Accessories'] },
+  ]},
+  { id:'pets', label:'Pets', cats:[
+    { id:'p-dog', label:'Dog', subs:['All','Clothing','Accessories','Beds','Toys'] },
+    { id:'p-cat', label:'Cat', subs:['All','Clothing','Accessories','Beds','Toys'] },
+  ]},
+  { id:'elec', label:'Electronics', cats:[
+    { id:'e-phn', label:'Phones & Accessories', subs:['All','Cases','Chargers','Headphones','Screen Protectors'] },
+    { id:'e-cam', label:'Cameras', subs:['All','Digital','Film','Lenses','Accessories'] },
+    { id:'e-gam', label:'Gaming', subs:['All','Consoles','Controllers','Games','Accessories'] },
+  ]},
+];
+
+// Product names & prices
+const PRODUCT_NAMES = [
+  'Pink cashmere knit Sweater','Vintage Levi\'s 501 Jeans','Silk slip dress','Wool blazer',
+  'Leather crossbody bag','Floral midi skirt','Ribbed crop top','Trench coat',
+  'High-rise wide leg pants','Satin blouse','Denim jacket','Wrap dress',
+  'Cashmere cardigan','Cotton sundress','Chunky knit sweater','Pleated midi skirt',
+  'Fitted turtleneck','Linen shorts','Oversized blazer','Flare jeans',
+  'Slip midi dress','Striped button-down','Knit cardigan','A-line skirt',
+  'Velvet blazer','Ruched top','Pleated trousers','Lace blouse',
+  'Ribbed tank dress','Leather trousers',
+];
+const PRICES = [[28,45],[39,68],[55,120],[72,150],[89,220],[110,145],[34,80],[48,95],[62,180],[95,200]];
+const SIZES  = ['XS','S','S/M','M','M/L','L','XL','XXL','US 4','US 6','US 8','US 10','US 12'];
+const BADGES = [[true,true],[true,false],[false,true],[false,false]];
+
+/* ==================== IMAGE SEEDS ==================== */
+let SEEDS = generateSeeds();
+
+function generateSeeds(){
+  const grids = {};
+  ['v1','v2','v3','v4','v5'].forEach(v=>{
+    grids[v] = Array.from({length:30},(_,i)=>rndSeed(v+i));
+  });
+  const cats = {};
+  CATEGORY_ITEMS.forEach(c=>{ cats[c.seed] = rndSeed(c.seed); });
+  return {grids, cats};
+}
+
+function rndSeed(base){
+  return base + Math.random().toString(36).slice(2,6);
+}
+
+function refreshImages(){
+  SEEDS = generateSeeds();
+  renderAllGrids();
+  renderAllCarousels();
+}
+
+/* ==================== RENDER PRODUCT GRID ==================== */
+function makeCard(name,price,size,hasFree,hasAd,hasNwt,seed){
+  const priceNow = price[0], priceWas = price[1];
+  const imgUrl = `https://picsum.photos/seed/${seed}/426/568`;
+  return `<div class="product-card">
+    <div class="product-img-wrap">
+      <img src="${imgUrl}" class="product-img" loading="lazy" alt="${name}">
+      ${hasFree ? `<div class="badge-free"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 3.5l3 3L9 1" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg> Free</div>` : ''}
+      <button class="badge-heart">
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><path d="M8 12.5S1 8.5 1 4a3.5 3.5 0 017 0 3.5 3.5 0 017 0c0 4.5-7 8.5-7 8.5z" stroke="#121212" stroke-width="1.2" fill="none"/></svg>
+      </button>
+    </div>
+    <div class="product-info">
+      <div class="product-title-row">
+        ${hasAd ? '<span class="badge-ad">Ad</span>' : ''}
+        <span class="product-name">${name}</span>
+        ${hasNwt ? '<span class="badge-nwt">NWT</span>' : ''}
+      </div>
+      <div class="product-price-row">
+        <div class="product-prices">
+          <span class="price-now">$${priceNow}</span>
+          <span class="price-was">$${priceWas}</span>
+        </div>
+        <span class="product-size">${size}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderGrid(containerId, seeds){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = seeds.map((seed,i)=>{
+    const name  = PRODUCT_NAMES[i % PRODUCT_NAMES.length];
+    const price = PRICES[i % PRICES.length];
+    const size  = SIZES[i % SIZES.length];
+    const [hasAd,hasNwt] = BADGES[i%4];
+    const hasFree = i%3 !== 2;
+    return makeCard(name,price,size,hasFree,hasAd,hasNwt,seed);
+  }).join('');
+}
+
+function renderAllGrids(){
+  renderGrid('v1-grid', SEEDS.grids.v1);
+  renderGrid('v2-grid', SEEDS.grids.v2);
+  renderGrid('v3-grid', SEEDS.grids.v3.slice(0,25));
+  renderGrid('v4-grid', SEEDS.grids.v4);
+  renderGrid('v5-grid', SEEDS.grids.v5);
+}
+
+/* ==================== RENDER CATEGORY CAROUSEL ==================== */
+function renderCarousel(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = CATEGORY_ITEMS.map((item,i)=>{
+    const seed = SEEDS.cats[item.seed] || item.seed;
+    return `<button class="cat-carousel-item" onclick="alert('Category: ${item.label}')">
+      <img class="cat-thumb" src="https://picsum.photos/seed/${seed}/130/172" loading="lazy" alt="${item.label}">
+      <span class="cat-thumb-label">${item.label}</span>
+    </button>`;
+  }).join('');
+}
+
+function renderAllCarousels(){
+  renderCarousel('v2-cat-carousel');
+  renderCarousel('v4-cat-carousel');
+  renderCarousel('v5-cat-carousel');
+}
+
+/* ==================== CATEGORY PANEL ==================== */
+const panelState = {
+  open:false, deptId:null, catId:null, anchorBtn:null, anchorBarId:null,
+  // 선택 기억
+  selectedDeptId:null, selectedCatId:null, selectedSubLabel:null
+};
+let filterIdSeq = 0;
+
+function toggleCatPanel(btn, barId){
+  if(panelState.open && panelState.anchorBtn === btn){
+    closeCatPanel(); return;
+  }
+  panelState.open = true;
+  panelState.anchorBtn = btn;
+  panelState.anchorBarId = barId;
+
+  // 저장된 선택이 없으면 기존 chip 텍스트에서 추론
+  if(!panelState.selectedDeptId){
+    const leftId = barId.replace('filter-bar','filter-left');
+    const chip = document.querySelector('#'+leftId+' .filter-chip[data-type="category"]');
+    if(chip){
+      const txt = chip.childNodes[0].textContent.trim();
+      const directDept = CAT_TREE.find(d => d.label === txt);
+      if(directDept){
+        panelState.selectedDeptId   = directDept.id;
+        panelState.selectedCatId    = null;
+        panelState.selectedSubLabel = 'All';
+      } else {
+        const slash = txt.indexOf(' / ');
+        if(slash > -1){
+          const catLabel = txt.slice(0, slash);
+          const subLabel = txt.slice(slash + 3);
+          for(const d of CAT_TREE){
+            const cat = d.cats.find(c => c.label === catLabel);
+            if(cat){ panelState.selectedDeptId=d.id; panelState.selectedCatId=cat.id; panelState.selectedSubLabel=subLabel; break; }
+          }
+        }
+      }
+    }
+  }
+
+  // 선택 위치 레벨로 복원
+  if(panelState.selectedDeptId){
+    panelState.deptId = panelState.selectedDeptId;
+    panelState.catId  = panelState.selectedCatId;
+  } else {
+    panelState.deptId = null;
+    panelState.catId  = null;
+  }
+
+  positionPanel(btn);
+  renderPanel();
+  document.getElementById('cat-panel').style.display = 'block';
+}
+
+function closeCatPanel(){
+  document.getElementById('cat-panel').style.display = 'none';
+  panelState.open = false;
+  panelState.anchorBtn = null;
+}
+
+function positionPanel(btn){
+  const rect = btn.getBoundingClientRect();
+  const panel = document.getElementById('cat-panel');
+  const top  = rect.bottom + 8 + window.scrollY;
+  const left = rect.left;
+  const winW = window.innerWidth;
+  const panW = 283;
+  panel.style.top  = top + 'px';
+  panel.style.left = Math.min(left, winW - panW - 16) + 'px';
+}
+
+const CHEVRON_SVG = `<svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.83594 12.5033L10.1716 8.16768L5.83594 3.83203" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const RADIO_SVG   = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_43598)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/></g><defs><clipPath id="clip0_1799_43598"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
+const RADIO_ON    = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_21956)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/><rect x="4" y="4" width="8" height="8" rx="4" fill="#121212"/></g><defs><clipPath id="clip0_1799_21956"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
+
+function renderPanel(){
+  const panel = document.getElementById('cat-panel');
+  const { deptId, catId } = panelState;
+
+  if(!deptId){
+    // L0: Department list — py-18 gap-16, rows: pl-18 pr-21
+    panel.innerHTML = `
+      <ul style="list-style:none;padding:18px 0;display:flex;flex-direction:column;gap:16px">
+        ${CAT_TREE.map(d=>`
+          <li onclick="catGoLevel1('${d.id}')"
+              style="display:flex;align-items:center;padding:0 21px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
+              onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+            <span style="flex:1">${d.label}</span>
+            ${CHEVRON_SVG}
+          </li>`).join('')}
+      </ul>`;
+    return;
+  }
+
+  const dept = CAT_TREE.find(d=>d.id===deptId);
+
+  if(!catId){
+    // L1: Header (← Dept, bottom border) + All(radio) + categories(chevron) — pb-18 gap-20
+    panel.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;
+                  padding:14px 18px;border-bottom:1px solid #ececec;position:relative">
+        <button onclick="catGoBack(0)"
+                style="position:absolute;left:14px;background:none;border:none;cursor:pointer;
+                       display:flex;align-items:center;padding:4px;color:#121212">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <span style="font-size:13px;font-weight:500;color:#121212">${dept.label}</span>
+      </div>
+      <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
+        <li onclick="catSelect('${dept.id}','','${dept.label}','All')"
+            style="display:flex;align-items:center;justify-content:space-between;
+                   padding:0 18px;cursor:pointer;font-size:13px;line-height:18px"
+            onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+          <span>All</span>
+          ${(panelState.selectedDeptId===dept.id && !panelState.selectedCatId) ? RADIO_ON : RADIO_SVG}
+        </li>
+        ${dept.cats.map(c=>`
+          <li onclick="catGoLevel2('${c.id}')"
+              style="display:flex;align-items:center;padding:0 21px 0 18px;
+                     cursor:pointer;font-size:13px;line-height:18px"
+              onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+            <span style="flex:1">${c.label}</span>
+            ${CHEVRON_SVG}
+          </li>`).join('')}
+      </ul>`;
+    return;
+  }
+
+  const cat = dept.cats.find(c=>c.id===catId);
+
+  // L2: Header (← Cat, bottom border) + subcategories(radio) — pb-18 gap-20
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;
+                padding:14px 18px;border-bottom:1px solid #ececec;position:relative">
+      <button onclick="catGoBack(1)"
+              style="position:absolute;left:14px;background:none;border:none;cursor:pointer;
+                     display:flex;align-items:center;padding:4px;color:#121212">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </button>
+      <span style="font-size:13px;font-weight:500;color:#121212">${cat.label}</span>
+    </div>
+    <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
+      ${cat.subs.map(s=>`
+        <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
+            style="display:flex;align-items:center;justify-content:space-between;
+                   padding:0 18px;cursor:pointer;font-size:13px;line-height:18px"
+            onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+          <span>${s}</span>
+          ${(panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id && panelState.selectedSubLabel===s) ? RADIO_ON : RADIO_SVG}
+        </li>`).join('')}
+    </ul>`;
+}
+
+function catGoLevel1(deptId){
+  panelState.deptId = deptId;
+  panelState.catId  = null;
+  renderPanel();
+}
+
+function catGoLevel2(catId){
+  panelState.catId = catId;
+  renderPanel();
+}
+
+function catGoBack(level){
+  if(level===0){ panelState.deptId=null; panelState.catId=null; }
+  else          { panelState.catId=null; }
+  renderPanel();
+}
+
+function catSelect(deptId, catId, catLabel, subLabel){
+  // 선택 상태 저장
+  panelState.selectedDeptId   = deptId;
+  panelState.selectedCatId    = catId || null;
+  panelState.selectedSubLabel = subLabel;
+
+  const dept   = CAT_TREE.find(d=>d.id===deptId);
+  const deptLbl = dept ? dept.label : '';
+  const display = subLabel==='All'
+    ? (catLabel || deptLbl)
+    : catLabel
+      ? `${catLabel} / ${subLabel}`
+      : `${deptLbl}: ${subLabel}`;
+
+  const barId = panelState.anchorBarId;
+  const filterLeftEl = document.getElementById(barId.replace('filter-bar','filter-left'));
+  if(filterLeftEl){
+    // Remove existing category chip
+    filterLeftEl.querySelectorAll('.filter-chip[data-type="category"]').forEach(c=>c.remove());
+    // Add new chip before divider or at end
+    const divider = filterLeftEl.querySelector('.filter-divider');
+    const chip = document.createElement('span');
+    chip.className = 'filter-chip';
+    chip.setAttribute('data-type','category');
+    chip.innerHTML = `${display} <span class="chip-x" onclick="removeChip(this.parentElement,'${barId.replace('filter-bar','filter-left')}')">✕</span>`;
+    chip.onclick = function(e){ if(!e.target.classList.contains('chip-x')) return; removeChip(chip, barId.replace('filter-bar','filter-left')); };
+    if(divider) filterLeftEl.insertBefore(chip, divider.nextSibling);
+    else filterLeftEl.appendChild(chip);
+
+    // Show divider if hidden
+    if(divider) divider.style.display = '';
+  }
+
+  // Mark category btn as active
+  const catBtn = panelState.anchorBtn;
+  if(catBtn){ catBtn.classList.add('is-active'); }
+
+  // Update breadcrumb of the current variant
+  const variantEl = document.getElementById(barId.replace('-filter-bar',''));
+  if(variantEl){
+    const lastSpan = variantEl.querySelector('.breadcrumb span:last-child');
+    if(lastSpan) lastSpan.textContent = deptLbl;
+  }
+
+  closeCatPanel();
+}
+
+function removeChip(chip, containerId){
+  if(chip.getAttribute('data-type') === 'category'){
+    panelState.selectedDeptId   = null;
+    panelState.selectedCatId    = null;
+    panelState.selectedSubLabel = null;
+  }
+  chip.remove();
+}
+
+/* ==================== VARIANT SWITCHER ==================== */
+function switchVariant(n){
+  document.querySelectorAll('.variant-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.vbtn').forEach((b,i)=>{
+    b.classList.toggle('on', i===n-1);
+  });
+  document.getElementById('v'+n).classList.add('active');
+  closeCatPanel();
+}
+
+/* ==================== OUTSIDE CLICK ==================== */
+document.addEventListener('click', e=>{
+  if(!panelState.open) return;
+  const panel = document.getElementById('cat-panel');
+  // composedPath() preserves the original event path even after innerHTML replacement
+  const path = e.composedPath ? e.composedPath() : [];
+  if(path.includes(panel)) return;
+  if(e.target.closest && e.target.closest('.filter-pill')) return;
+  closeCatPanel();
+});
+
+/* ==================== INIT ==================== */
+renderAllGrids();
+renderAllCarousels();
+</script>
+</body>
+</html>
