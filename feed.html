@@ -580,10 +580,8 @@ button{cursor:pointer;font-family:inherit}
   <div class="page-wrap">
     <div class="breadcrumb">
       <a href="#" onclick="breadcrumbNav('v5','home');return false">Home</a>
-      <span class="breadcrumb-sep">›</span>
-      <span class="breadcrumb-link" onclick="breadcrumbNav('v5','dept','women')">Women</span>
     </div>
-    <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
+    <h1 class="page-title">All Items</h1>
     <!-- Subcategory Scroller (shown when breadcrumb = 3 items) -->
     <div class="subcat-wrap" id="v5-subcat">
       <div class="subcat-scroll">
@@ -618,9 +616,7 @@ button{cursor:pointer;font-family:inherit}
         <button class="filter-pill">Shipping <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
         <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
         <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
-        <div class="filter-divider"></div>
-        <!-- Active filter chip (Women) -->
-        <span class="filter-chip" data-type="category" onclick="removeChip(this,'v5-filter-left')">Women <span class="chip-x">✕</span></span>
+        <div class="filter-divider" style="display:none"></div>
       </div>
       <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
@@ -1421,6 +1417,41 @@ function removeChip(chip, containerId){
     panelState.selectedSubLabel = null;
   }
   chip.remove();
+
+  // If no chips remain → reset to "All Items" state
+  const filterLeft = document.getElementById(containerId);
+  if(filterLeft && !filterLeft.querySelector('.filter-chip')){
+    // Hide divider
+    const divider = filterLeft.querySelector('.filter-divider');
+    if(divider) divider.style.display = 'none';
+
+    // Find variant root from containerId (e.g. "v5-filter-left" → "v5")
+    const variantId = containerId.replace('-filter-left','');
+    const variantEl = document.getElementById(variantId);
+    if(variantEl){
+      // Reset breadcrumb → Home only
+      const bc = variantEl.querySelector('.breadcrumb');
+      if(bc) bc.innerHTML = `<a href="#" onclick="breadcrumbNav('${variantId}','home');return false">Home</a>`;
+
+      // Reset page title
+      const titleEl = variantEl.querySelector('.page-title');
+      if(titleEl) titleEl.textContent = 'All Items';
+
+      // Hide subcat, show carousel
+      const subcatWrap = document.getElementById(variantId + '-subcat');
+      if(subcatWrap) subcatWrap.classList.remove('active');
+      const carousel = variantEl.querySelector('.cat-carousel-wrap');
+      const carouselHeader = variantEl.querySelector('.carousel-view-header');
+      if(carousel){ carousel.style.display = ''; }
+      if(carouselHeader){ carouselHeader.style.display = ''; }
+
+      // Reset carousel to page 0
+      renderActiveCarousel(variantId + '-cat-carousel', 0);
+    }
+
+    // Refresh product images
+    refreshImages();
+  }
 }
 
 /* ==================== VARIANT SWITCHER ==================== */
