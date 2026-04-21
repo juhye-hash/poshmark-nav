@@ -7,19 +7,23 @@
 <style>
 /* ===================== FONTS ===================== */
 @font-face {
+  font-family: 'Nantes';
+  src: url('../fonts/Nantes.woff2') format('woff2');
+}
+@font-face {
   font-family: 'Graphik';
   font-weight: 400;
-  src: url('fonts/Graphik-Regular-Web.woff2') format('woff2');
+  src: url('drive-download-20260410T064422Z-3-001/Graphik-Regular-Web.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Graphik';
   font-weight: 500;
-  src: url('fonts/Graphik-Medium-Web.woff2') format('woff2');
+  src: url('drive-download-20260410T064422Z-3-001/Graphik-Medium-Web.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Graphik';
   font-weight: 600;
-  src: url('fonts/Graphik-Semibold-Web.woff2') format('woff2');
+  src: url('drive-download-20260410T064422Z-3-001/Graphik-Semibold-Web.woff2') format('woff2');
 }
 
 /* ===================== BASE ===================== */
@@ -220,14 +224,17 @@ button{cursor:pointer;font-family:inherit}
   font-size:14px;font-weight:500;color:#121212;
   line-height:19px;white-space:nowrap;
 }
-.cat-carousel-next{
-  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
-  width:32px;height:32px;border-radius:50%;
-  border:1px solid #ddd;background:#fff;
+.cat-carousel-next,.cat-carousel-prev{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:none;border:none;padding:0;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 1px 3px rgba(0,0,0,.17);font-size:14px;
+  transition:opacity 0.15s;
 }
-.cat-carousel-next:hover{border-color:#bbb;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.cat-carousel-next{right:-20px}
+.cat-carousel-prev{left:-20px;opacity:0;pointer-events:none}
+.cat-carousel-prev.visible{opacity:1;pointer-events:auto}
+.cat-carousel-grid{transition:opacity 0.18s}
+.cat-carousel-grid.fading{opacity:0}
 
 /* ===================== FILTER BAR ===================== */
 .filter-bar{
@@ -333,9 +340,7 @@ button{cursor:pointer;font-family:inherit}
   padding:2px 4px;line-height:10px;white-space:nowrap;
 }
 .badge-nwt{
-  flex-shrink:0;background:#2b6cb0;color:#fff;
-  font-size:10px;font-weight:600;
-  padding:2px 4px;line-height:10px;white-space:nowrap;
+  flex-shrink:0;display:inline-flex;align-items:center;
 }
 .product-name{
   font-size:15px;color:#121212;line-height:1.33;
@@ -531,7 +536,7 @@ button{cursor:pointer;font-family:inherit}
         <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
         <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
       </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="product-grid" id="v1-grid"></div>
     <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
@@ -549,8 +554,9 @@ button{cursor:pointer;font-family:inherit}
     <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
     <!-- Category Carousel -->
     <div class="cat-carousel-wrap">
+      <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev" result="shape"/></filter></defs></svg></button>
       <div class="cat-carousel-grid" id="v2-cat-carousel"></div>
-      <button class="cat-carousel-next">›</button>
+      <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
     </div>
     <div class="filter-bar" id="v2-filter-bar">
       <div class="filter-left" id="v2-filter-left">
@@ -566,7 +572,7 @@ button{cursor:pointer;font-family:inherit}
         <button class="filter-pill">Condition <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
         <button class="filter-pill">Availability <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
       </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="product-grid" id="v2-grid"></div>
     <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
@@ -631,7 +637,7 @@ button{cursor:pointer;font-family:inherit}
           <button class="filter-pill">Color <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
           <button class="filter-pill">Price <svg width="9" height="5" viewBox="0 0 9 5" fill="none"><path d="M1 1l3.5 3L8 1" stroke="#ccc" stroke-width="1.3" stroke-linecap="round"/></svg></button>
         </div>
-        <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
       <div class="product-grid" id="v3-grid" style="grid-template-columns:repeat(5,1fr)"></div>
       <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
@@ -649,8 +655,9 @@ button{cursor:pointer;font-family:inherit}
     </div>
     <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
     <div class="cat-carousel-wrap">
+      <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev4)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev4" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev4"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev4" result="shape"/></filter></defs></svg></button>
       <div class="cat-carousel-grid" id="v4-cat-carousel"></div>
-      <button class="cat-carousel-next">›</button>
+      <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
     </div>
     <div class="filter-bar" id="v4-filter-bar">
       <div class="filter-left" id="v4-filter-left">
@@ -669,7 +676,7 @@ button{cursor:pointer;font-family:inherit}
         <span class="filter-chip" data-type="category" onclick="removeChip(this,'v4-filter-left')">Women <span class="chip-x">✕</span></span>
         <span class="filter-chip" onclick="removeChip(this,'v4-filter-left')">US 6 <span class="chip-x">✕</span></span>
       </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="product-grid" id="v4-grid"></div>
     <div class="loading-row"><div class="loader-spin"></div><span>Loading…</span></div>
@@ -687,8 +694,9 @@ button{cursor:pointer;font-family:inherit}
     <h1 class="page-title">Women's Clothing, Accessories &amp; Shoes</h1>
     <!-- Category Carousel -->
     <div class="cat-carousel-wrap">
+      <button class="cat-carousel-prev" onclick="carouselPrev(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_prev5)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M20.0955 22.9176L15.1758 17.9978L20.0955 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_prev5" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_prev5"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_prev5" result="shape"/></filter></defs></svg></button>
       <div class="cat-carousel-grid" id="v5-cat-carousel"></div>
-      <button class="cat-carousel-next">›</button>
+      <button class="cat-carousel-next" onclick="carouselNext(this)"><svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_1795_39992)"><rect x="3" y="2" width="32" height="32" rx="16" fill="white" shape-rendering="crispEdges"/><rect x="3.5" y="2.5" width="31" height="31" rx="15.5" stroke="#E3E3E3" shape-rendering="crispEdges"/><path d="M17.9045 22.9176L22.8242 17.9978L17.9045 13.0781" stroke="#121212" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><filter id="filter0_d_1795_39992" x="0" y="0" width="38" height="38" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/><feOffset dy="1"/><feGaussianBlur stdDeviation="1.5"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1795_39992"/><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1795_39992" result="shape"/></filter></defs></svg></button>
     </div>
     <!-- Filter Bar -->
     <div class="filter-bar" id="v5-filter-bar">
@@ -708,7 +716,7 @@ button{cursor:pointer;font-family:inherit}
         <!-- Active filter chip (Women) -->
         <span class="filter-chip" data-type="category" onclick="removeChip(this,'v5-filter-left')">Women <span class="chip-x">✕</span></span>
       </div>
-      <button class="sort-btn">Sort by: Relevance <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4l3-3 3 3M4 10l3 3 3-3" stroke="#717171" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="sort-btn">Sort by: Relevance <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.73528 3.55566V12.4446M5.73528 12.4446L3.55469 10.2708M5.73528 12.4446L7.99913 10.2708" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5126 12.4443V3.55545M11.5126 3.55545L9.33203 5.72924M11.5126 3.55545L13.7765 5.72924" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <!-- Product Grid -->
     <div class="product-grid" id="v5-grid"></div>
@@ -732,18 +740,48 @@ button{cursor:pointer;font-family:inherit}
 
 <script>
 /* ==================== DATA ==================== */
-const CATEGORY_ITEMS = [
-  {label:'Accessories',    seed:'acc2024'},
-  {label:'Jackets & Coats',seed:'jac2024'},
-  {label:'Tops',           seed:'top2024'},
-  {label:'Intimates & Sleepwear', seed:'int2024'},
-  {label:'Jeans',          seed:'jns2024'},
-  {label:'Pants & Jumpsuits', seed:'pnt2024'},
-  {label:'Dresses',        seed:'drs2024'},
-  {label:'Camisoles',      seed:'cam2024'},
-  {label:'Bags',           seed:'bag2024'},
-  {label:'Shirts',         seed:'sht2024'},
+const CAROUSEL_PAGES = [
+  // Page 0 — Women
+  [
+    {label:'Accessories',          seed:'acc2024'},
+    {label:'Jackets & Coats',      seed:'jac2024'},
+    {label:'Tops',                 seed:'top2024'},
+    {label:'Intimates & Sleepwear',seed:'int2024'},
+    {label:'Jeans',                seed:'jns2024'},
+    {label:'Pants & Jumpsuits',    seed:'pnt2024'},
+    {label:'Dresses',              seed:'drs2024'},
+    {label:'Camisoles',            seed:'cam2024'},
+    {label:'Bags',                 seed:'bag2024'},
+    {label:'Shirts',               seed:'sht2024'},
+  ],
+  // Page 1 — Men
+  [
+    {label:'Tops',                 seed:'m-top24'},
+    {label:'Jeans',                seed:'m-jns24'},
+    {label:'Jackets & Coats',      seed:'m-jac24'},
+    {label:'Shorts',               seed:'m-sht24'},
+    {label:'Activewear',           seed:'m-act24'},
+    {label:'Shoes',                seed:'m-sho24'},
+    {label:'Hoodies',              seed:'m-hod24'},
+    {label:'Suits & Blazers',      seed:'m-sui24'},
+    {label:'Shirts',               seed:'m-shrt24'},
+    {label:'Accessories',          seed:'m-acc24'},
+  ],
+  // Page 2 — Kids & Home
+  [
+    {label:"Girls' Clothing",      seed:'k-grl24'},
+    {label:"Boys' Clothing",       seed:'k-boy24'},
+    {label:'Baby & Toddler',       seed:'k-bby24'},
+    {label:'Shoes',                seed:'k-sho24'},
+    {label:'Accessories',          seed:'k-acc24'},
+    {label:'Home Decor',           seed:'h-dec24'},
+    {label:'Bedding',              seed:'h-bed24'},
+    {label:'Kitchen',              seed:'h-kit24'},
+    {label:'Bath',                 seed:'h-bat24'},
+    {label:'Storage',              seed:'h-sto24'},
+  ],
 ];
+const CATEGORY_ITEMS = CAROUSEL_PAGES.flat();
 
 // Category panel data: departments → categories → subcategories
 const CAT_TREE = [
@@ -837,14 +875,14 @@ function makeCard(name,price,size,hasFree,hasAd,hasNwt,seed){
       <img src="${imgUrl}" class="product-img" loading="lazy" alt="${name}">
       ${hasFree ? `<div class="badge-free"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 3.5l3 3L9 1" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg> Free</div>` : ''}
       <button class="badge-heart">
-        <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><path d="M8 12.5S1 8.5 1 4a3.5 3.5 0 017 0 3.5 3.5 0 017 0c0 4.5-7 8.5-7 8.5z" stroke="#121212" stroke-width="1.2" fill="none"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.4951 6.84961C17.1288 6.84961 18.5389 7.99514 18.9854 9.51855L19.0615 9.82812C19.4594 11.8151 18.4578 13.8538 16.9727 15.5312C16.579 15.9753 16.1524 16.3893 15.6953 16.7646H15.6943C14.7914 17.5071 13.7844 18.1233 12.9932 18.5566C12.5999 18.772 12.2645 18.9396 12.0293 19.0527C12.0194 19.0575 12.0095 19.0618 12 19.0664C11.9905 19.0618 11.9806 19.0575 11.9707 19.0527C11.7355 18.9396 11.4002 18.7721 11.0068 18.5566C10.2156 18.1232 9.20859 17.5068 8.30566 16.7646H8.30469C7.84756 16.3893 7.42099 15.9753 7.02734 15.5312C5.54182 13.854 4.54064 11.8146 4.93848 9.82812C5.27348 8.15322 6.76156 6.84961 8.50488 6.84961C9.6489 6.84961 10.6708 7.33636 11.373 8.10352L12 8.78809L12.627 8.10352C13.3292 7.33637 14.3511 6.84962 15.4951 6.84961Z" stroke="#121212" stroke-width="1.7"/></svg>
       </button>
     </div>
     <div class="product-info">
       <div class="product-title-row">
         ${hasAd ? '<span class="badge-ad">Ad</span>' : ''}
         <span class="product-name">${name}</span>
-        ${hasNwt ? '<span class="badge-nwt">NWT</span>' : ''}
+        ${hasNwt ? '<span class="badge-nwt"><svg width="31" height="15" viewBox="0 0 31 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="31" height="15" fill="#FCDBD7"/><path d="M4.95031 11V3.85H6.54031L9.55031 9.02V3.85H10.7603V11H9.38031L6.16031 5.52V11H4.95031ZM13.5915 11L11.8115 3.85H13.1715L14.4115 9.1L15.8015 3.85H16.9015L18.3215 9.13L19.6015 3.85H20.8415L19.0515 11H17.7215L16.3115 5.79L14.8615 11H13.5915ZM23.4199 11V4.9H21.4299V3.85H26.7499V4.9H24.7599V11H23.4199Z" fill="#610722"/></svg></span>' : ''}
       </div>
       <div class="product-price-row">
         <div class="product-prices">
@@ -879,22 +917,51 @@ function renderAllGrids(){
 }
 
 /* ==================== RENDER CATEGORY CAROUSEL ==================== */
-function renderCarousel(containerId){
+const carouselPageState = {};
+
+function renderCarousel(containerId, page){
   const el = document.getElementById(containerId);
   if(!el) return;
-  el.innerHTML = CATEGORY_ITEMS.map((item,i)=>{
+  if(page === undefined) page = carouselPageState[containerId] || 0;
+  carouselPageState[containerId] = page;
+  const items = CAROUSEL_PAGES[page] || CAROUSEL_PAGES[0];
+  el.innerHTML = items.map(item=>{
     const seed = SEEDS.cats[item.seed] || item.seed;
     return `<button class="cat-carousel-item" onclick="alert('Category: ${item.label}')">
       <img class="cat-thumb" src="https://picsum.photos/seed/${seed}/130/172" loading="lazy" alt="${item.label}">
       <span class="cat-thumb-label">${item.label}</span>
     </button>`;
   }).join('');
+  // update prev/next button visibility
+  const wrap = el.closest('.cat-carousel-wrap');
+  if(wrap){
+    const prevBtn = wrap.querySelector('.cat-carousel-prev');
+    const nextBtn = wrap.querySelector('.cat-carousel-next');
+    if(prevBtn) prevBtn.classList.toggle('visible', page > 0);
+    if(nextBtn) nextBtn.style.opacity = page >= CAROUSEL_PAGES.length - 1 ? '0.25' : '1';
+  }
+}
+
+function carouselNext(btn){
+  const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
+  const cur = carouselPageState[grid.id] || 0;
+  if(cur >= CAROUSEL_PAGES.length - 1) return;
+  grid.classList.add('fading');
+  setTimeout(()=>{ renderCarousel(grid.id, cur + 1); grid.classList.remove('fading'); }, 180);
+}
+
+function carouselPrev(btn){
+  const grid = btn.closest('.cat-carousel-wrap').querySelector('.cat-carousel-grid');
+  const cur = carouselPageState[grid.id] || 0;
+  if(cur <= 0) return;
+  grid.classList.add('fading');
+  setTimeout(()=>{ renderCarousel(grid.id, cur - 1); grid.classList.remove('fading'); }, 180);
 }
 
 function renderAllCarousels(){
-  renderCarousel('v2-cat-carousel');
-  renderCarousel('v4-cat-carousel');
-  renderCarousel('v5-cat-carousel');
+  renderCarousel('v2-cat-carousel', 0);
+  renderCarousel('v4-cat-carousel', 0);
+  renderCarousel('v5-cat-carousel', 0);
 }
 
 /* ==================== CATEGORY PANEL ==================== */
@@ -958,15 +1025,27 @@ function closeCatPanel(){
   panelState.anchorBtn = null;
 }
 
+let _panelFixedTop = null;
+let _panelFixedLeft = null;
+
 function positionPanel(btn){
+  if(_panelFixedTop !== null){
+    // 위치 고정 — 처음 계산한 값 재사용
+    const panel = document.getElementById('cat-panel');
+    panel.style.top  = _panelFixedTop  + 'px';
+    panel.style.left = _panelFixedLeft + 'px';
+    return;
+  }
   const rect = btn.getBoundingClientRect();
   const panel = document.getElementById('cat-panel');
-  const top  = rect.bottom + 8 + window.scrollY;
+  const top  = rect.bottom + 8;
   const left = rect.left;
   const winW = window.innerWidth;
   const panW = 283;
-  panel.style.top  = top + 'px';
-  panel.style.left = Math.min(left, winW - panW - 16) + 'px';
+  _panelFixedTop  = top;
+  _panelFixedLeft = Math.min(left, winW - panW - 16);
+  panel.style.top  = _panelFixedTop  + 'px';
+  panel.style.left = _panelFixedLeft + 'px';
 }
 
 const CHEVRON_SVG = `<svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.83594 12.5033L10.1716 8.16768L5.83594 3.83203" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -983,7 +1062,7 @@ function renderPanel(){
       <ul style="list-style:none;padding:18px 0;display:flex;flex-direction:column;gap:16px">
         ${CAT_TREE.map(d=>`
           <li onclick="catGoLevel1('${d.id}')"
-              style="display:flex;align-items:center;padding:0 21px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
+              style="display:flex;align-items:center;padding:0 11px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
               onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
             <span style="flex:1">${d.label}</span>
             ${CHEVRON_SVG}
@@ -997,11 +1076,11 @@ function renderPanel(){
   if(!catId){
     // L1: Header (← Dept, bottom border) + All(radio) + categories(chevron) — pb-18 gap-20
     panel.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;
-                  padding:14px 18px;border-bottom:1px solid #ececec;position:relative">
+      <div style="display:flex;align-items:center;gap:6px;
+                  padding:14px 18px;border-bottom:1px solid #ececec">
         <button onclick="catGoBack(0)"
-                style="position:absolute;left:14px;background:none;border:none;cursor:pointer;
-                       display:flex;align-items:center;padding:4px;color:#121212">
+                style="background:none;border:none;cursor:pointer;
+                       display:flex;align-items:center;padding:0;flex-shrink:0;color:#121212">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
         </button>
         <span style="font-size:13px;font-weight:500;color:#121212">${dept.label}</span>
@@ -1009,14 +1088,14 @@ function renderPanel(){
       <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
         <li onclick="catSelect('${dept.id}','','${dept.label}','All')"
             style="display:flex;align-items:center;justify-content:space-between;
-                   padding:0 18px;cursor:pointer;font-size:13px;line-height:18px"
+                   padding:0 11px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
             onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
           <span>All</span>
           ${(panelState.selectedDeptId===dept.id && !panelState.selectedCatId) ? RADIO_ON : RADIO_SVG}
         </li>
         ${dept.cats.map(c=>`
           <li onclick="catGoLevel2('${c.id}')"
-              style="display:flex;align-items:center;padding:0 21px 0 18px;
+              style="display:flex;align-items:center;padding:0 11px 0 18px;
                      cursor:pointer;font-size:13px;line-height:18px"
               onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
             <span style="flex:1">${c.label}</span>
@@ -1030,11 +1109,11 @@ function renderPanel(){
 
   // L2: Header (← Cat, bottom border) + subcategories(radio) — pb-18 gap-20
   panel.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;
-                padding:14px 18px;border-bottom:1px solid #ececec;position:relative">
+    <div style="display:flex;align-items:center;gap:8px;
+                padding:14px 18px;border-bottom:1px solid #ececec">
       <button onclick="catGoBack(1)"
-              style="position:absolute;left:14px;background:none;border:none;cursor:pointer;
-                     display:flex;align-items:center;padding:4px;color:#121212">
+              style="background:none;border:none;cursor:pointer;
+                     display:flex;align-items:center;padding:0;flex-shrink:0;color:#121212">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
       </button>
       <span style="font-size:13px;font-weight:500;color:#121212">${cat.label}</span>
@@ -1043,7 +1122,7 @@ function renderPanel(){
       ${cat.subs.map(s=>`
         <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
             style="display:flex;align-items:center;justify-content:space-between;
-                   padding:0 18px;cursor:pointer;font-size:13px;line-height:18px"
+                   padding:0 11px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
             onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
           <span>${s}</span>
           ${(panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id && panelState.selectedSubLabel===s) ? RADIO_ON : RADIO_SVG}
@@ -1108,8 +1187,17 @@ function catSelect(deptId, catId, catLabel, subLabel){
   // Update breadcrumb of the current variant
   const variantEl = document.getElementById(barId.replace('-filter-bar',''));
   if(variantEl){
-    const lastSpan = variantEl.querySelector('.breadcrumb span:last-child');
-    if(lastSpan) lastSpan.textContent = deptLbl;
+    const bc = variantEl.querySelector('.breadcrumb');
+    if(bc){
+      let html = `<a href="#">Home</a><span class="breadcrumb-sep">›</span><span>${deptLbl}</span>`;
+      if(catId && catLabel !== deptLbl){
+        html += `<span class="breadcrumb-sep">›</span><span>${catLabel}</span>`;
+      }
+      if(subLabel && subLabel !== 'All'){
+        html += `<span class="breadcrumb-sep">›</span><span>${subLabel}</span>`;
+      }
+      bc.innerHTML = html;
+    }
   }
 
   closeCatPanel();
