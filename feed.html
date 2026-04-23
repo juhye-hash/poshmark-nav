@@ -1041,6 +1041,7 @@ function toggleCatExpand(catId){
 }
 
 function catSelectCat(deptId, catId, catLabel){
+  panelState.expandedCatId = catId;
   catSelect(deptId, catId, catLabel, 'All');
 }
 
