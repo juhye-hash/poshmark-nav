@@ -421,7 +421,7 @@ button{cursor:pointer;font-family:inherit}
 /* ===================== CATEGORY PANEL ===================== */
 #cat-panel{
   position:fixed;width:283px;
-  max-height:350px;overflow-y:auto;
+  max-height:520px;overflow-y:auto;
   background:#fff;border-radius:8px;
   border:1px solid #ececec;
   box-shadow:0px 18px 55px 0px rgba(0,0,0,.15);
@@ -864,7 +864,7 @@ function renderAllCarousels(){
 
 /* ==================== CATEGORY PANEL ==================== */
 const panelState = {
-  open:false, deptId:null, catId:null, anchorBtn:null, anchorBarId:null,
+  open:false, deptId:null, expandedCatId:null, anchorBtn:null, anchorBarId:null,
   // 선택 기억
   selectedDeptId:null, selectedCatId:null, selectedSubLabel:null
 };
@@ -906,10 +906,10 @@ function toggleCatPanel(btn, barId){
   // 선택 위치 레벨로 복원
   if(panelState.selectedDeptId){
     panelState.deptId = panelState.selectedDeptId;
-    panelState.catId  = panelState.selectedCatId;
+    panelState.expandedCatId = panelState.selectedCatId || null;
   } else {
     panelState.deptId = null;
-    panelState.catId  = null;
+    panelState.expandedCatId = null;
   }
 
   positionPanel(btn);
@@ -946,16 +946,18 @@ function positionPanel(btn){
   panel.style.left = _panelFixedLeft + 'px';
 }
 
-const CHEVRON_SVG = `<svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.83594 12.5033L10.1716 8.16768L5.83594 3.83203" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const RADIO_SVG   = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_43598)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/></g><defs><clipPath id="clip0_1799_43598"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
-const RADIO_ON    = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_21956)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/><rect x="4" y="4" width="8" height="8" rx="4" fill="#121212"/></g><defs><clipPath id="clip0_1799_21956"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
+const CHEVRON_SVG  = `<svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.83594 12.5033L10.1716 8.16768L5.83594 3.83203" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHEVRON_DOWN = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6.5L8 10.5L12 6.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHEVRON_UP   = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9.5L8 5.5L12 9.5" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const RADIO_SVG    = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_43598)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/></g><defs><clipPath id="clip0_1799_43598"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
+const RADIO_ON     = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1799_21956)"><rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#121212"/><rect x="4" y="4" width="8" height="8" rx="4" fill="#121212"/></g><defs><clipPath id="clip0_1799_21956"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>`;
 
 function renderPanel(){
   const panel = document.getElementById('cat-panel');
-  const { deptId, catId } = panelState;
+  const { deptId, expandedCatId } = panelState;
 
   if(!deptId){
-    // L0: Department list — py-18 gap-16, rows: pl-18 pr-21
+    // L0: Department list
     panel.innerHTML = `
       <ul style="list-style:none;padding:18px 0;display:flex;flex-direction:column;gap:16px">
         ${CAT_TREE.map(d=>`
@@ -970,78 +972,78 @@ function renderPanel(){
   }
 
   const dept = CAT_TREE.find(d=>d.id===deptId);
+  const allSelected = panelState.selectedDeptId===dept.id && !panelState.selectedCatId;
 
-  if(!catId){
-    // L1: Header (← Dept, bottom border) + All(radio) + categories(chevron) — pb-18 gap-20
-    panel.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;
-                  padding:14px 18px;border-bottom:1px solid #ececec">
-        <button onclick="catGoBack(0)"
-                style="background:none;border:none;cursor:pointer;
-                       display:flex;align-items:center;padding:0;flex-shrink:0;color:#121212">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </button>
-        <span style="font-size:13px;font-weight:500;color:#121212">${dept.label}</span>
-      </div>
-      <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
-        <li onclick="catSelect('${dept.id}','','${dept.label}','All')"
-            style="display:flex;align-items:center;justify-content:space-between;
-                   padding:0 11px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
-            onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
-          <span>All</span>
-          ${(panelState.selectedDeptId===dept.id && !panelState.selectedCatId) ? RADIO_ON : RADIO_SVG}
-        </li>
-        ${dept.cats.map(c=>`
-          <li onclick="catGoLevel2('${c.id}')"
-              style="display:flex;align-items:center;padding:0 11px 0 18px;
-                     cursor:pointer;font-size:13px;line-height:18px"
+  // L1: Header + All + categories (radio LEFT, label, chevron RIGHT) with inline sub-expansion
+  let rows = `
+    <li onclick="catSelect('${dept.id}','','${dept.label}','All')"
+        style="display:flex;align-items:center;gap:8px;padding:0 18px;cursor:pointer;font-size:13px;line-height:18px"
+        onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+      ${allSelected ? RADIO_ON : RADIO_SVG}
+      <span style="flex:1;${allSelected?'font-weight:500':''}">All</span>
+    </li>`;
+
+  for(const cat of dept.cats){
+    const catSelected = panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id;
+    const isExpanded  = expandedCatId === cat.id;
+    const hasSubs     = cat.subs && cat.subs.length > 0;
+
+    rows += `
+      <li onclick="catSelectCat('${dept.id}','${cat.id}','${cat.label}')"
+          style="display:flex;align-items:center;gap:8px;padding:0 ${hasSubs?'4px':'18px'} 0 18px;cursor:pointer;font-size:13px;line-height:18px"
+          onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
+        ${catSelected ? RADIO_ON : RADIO_SVG}
+        <span style="flex:1;${catSelected?'font-weight:500':''}">${cat.label}</span>
+        ${hasSubs ? `<button onclick="event.stopPropagation();toggleCatExpand('${cat.id}')"
+                            style="background:none;border:none;cursor:pointer;padding:6px 14px 6px 6px;display:flex;align-items:center;flex-shrink:0;color:#121212">
+          ${isExpanded ? CHEVRON_UP : CHEVRON_DOWN}
+        </button>` : ''}
+      </li>`;
+
+    if(isExpanded && hasSubs){
+      for(const s of cat.subs){
+        const subSelected = catSelected && panelState.selectedSubLabel===s;
+        rows += `
+          <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
+              style="display:flex;align-items:center;gap:8px;padding:0 18px 0 42px;cursor:pointer;font-size:13px;line-height:18px"
               onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
-            <span style="flex:1">${c.label}</span>
-            ${CHEVRON_SVG}
-          </li>`).join('')}
-      </ul>`;
-    return;
+            ${subSelected ? RADIO_ON : RADIO_SVG}
+            <span>${s}</span>
+          </li>`;
+      }
+    }
   }
 
-  const cat = dept.cats.find(c=>c.id===catId);
-
-  // L2: Header (← Cat, bottom border) + subcategories(radio) — pb-18 gap-20
   panel.innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;
-                padding:14px 18px;border-bottom:1px solid #ececec">
-      <button onclick="catGoBack(1)"
-              style="background:none;border:none;cursor:pointer;
-                     display:flex;align-items:center;padding:0;flex-shrink:0;color:#121212">
+    <div style="display:flex;align-items:center;gap:6px;padding:14px 18px;border-bottom:1px solid #ececec">
+      <button onclick="catGoBack(0)"
+              style="background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:0;flex-shrink:0;color:#121212">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.16406 12.5033L1.82841 8.16768L6.16406 3.83203" stroke="#121212" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8.19995H13.5" stroke="black" stroke-width="1.3" stroke-linecap="round"/></svg>
       </button>
-      <span style="font-size:13px;font-weight:500;color:#121212">${cat.label}</span>
+      <span style="font-size:13px;font-weight:500;color:#121212">${dept.label}</span>
     </div>
     <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
-      ${cat.subs.map(s=>`
-        <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
-            style="display:flex;align-items:center;justify-content:space-between;
-                   padding:0 11px 0 18px;cursor:pointer;font-size:13px;line-height:18px"
-            onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
-          <span>${s}</span>
-          ${(panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id && panelState.selectedSubLabel===s) ? RADIO_ON : RADIO_SVG}
-        </li>`).join('')}
+      ${rows}
     </ul>`;
 }
 
 function catGoLevel1(deptId){
   panelState.deptId = deptId;
-  panelState.catId  = null;
+  panelState.expandedCatId = null;
   renderPanel();
 }
 
-function catGoLevel2(catId){
-  panelState.catId = catId;
+function toggleCatExpand(catId){
+  panelState.expandedCatId = (panelState.expandedCatId===catId) ? null : catId;
   renderPanel();
+}
+
+function catSelectCat(deptId, catId, catLabel){
+  catSelect(deptId, catId, catLabel, 'All');
 }
 
 function catGoBack(level){
-  if(level===0){ panelState.deptId=null; panelState.catId=null; }
-  else          { panelState.catId=null; }
+  if(level===0){ panelState.deptId=null; panelState.expandedCatId=null; }
   renderPanel();
 }
 
