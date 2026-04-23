@@ -926,12 +926,18 @@ function closeCatPanel(){
 let _panelFixedTop = null;
 let _panelFixedLeft = null;
 
+function applyPanelMaxHeight(){
+  const panel = document.getElementById('cat-panel');
+  const top = _panelFixedTop || parseFloat(panel.style.top) || 0;
+  panel.style.maxHeight = Math.max(200, window.innerHeight - top - 16) + 'px';
+}
+
 function positionPanel(btn){
   if(_panelFixedTop !== null){
-    // 위치 고정 — 처음 계산한 값 재사용
     const panel = document.getElementById('cat-panel');
     panel.style.top  = _panelFixedTop  + 'px';
     panel.style.left = _panelFixedLeft + 'px';
+    applyPanelMaxHeight();
     return;
   }
   const rect = btn.getBoundingClientRect();
@@ -944,6 +950,7 @@ function positionPanel(btn){
   _panelFixedLeft = Math.min(left, winW - panW - 16);
   panel.style.top  = _panelFixedTop  + 'px';
   panel.style.left = _panelFixedLeft + 'px';
+  applyPanelMaxHeight();
 }
 
 const CHEVRON_SVG  = `<svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.83594 12.5033L10.1716 8.16768L5.83594 3.83203" stroke="#121212" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -968,6 +975,7 @@ function renderPanel(){
             ${CHEVRON_SVG}
           </li>`).join('')}
       </ul>`;
+    applyPanelMaxHeight();
     return;
   }
 
@@ -1027,6 +1035,7 @@ function renderPanel(){
     <ul style="list-style:none;padding:0 0 18px;margin-top:20px;display:flex;flex-direction:column;gap:20px">
       ${rows}
     </ul>`;
+  applyPanelMaxHeight();
 }
 
 function catGoLevel1(deptId){
