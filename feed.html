@@ -984,15 +984,17 @@ function renderPanel(){
     </li>`;
 
   for(const cat of dept.cats){
-    const catSelected = panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id;
-    const isExpanded  = expandedCatId === cat.id;
-    const hasSubs     = cat.subs && cat.subs.length > 0;
+    const isCatMatch    = panelState.selectedDeptId===dept.id && panelState.selectedCatId===cat.id;
+    const hasSubSel     = isCatMatch && panelState.selectedSubLabel && panelState.selectedSubLabel !== 'All';
+    const catSelected   = isCatMatch && !hasSubSel;
+    const isExpanded    = expandedCatId === cat.id;
+    const hasSubs       = cat.subs && cat.subs.length > 0;
 
     rows += `
       <li onclick="catSelectCat('${dept.id}','${cat.id}','${cat.label}')"
           style="display:flex;align-items:center;gap:8px;padding:0 ${hasSubs?'4px':'18px'} 0 18px;cursor:pointer;font-size:13px;line-height:18px"
           onmouseenter="this.style.background='#f8f8f8'" onmouseleave="this.style.background=''">
-        ${catSelected ? RADIO_ON : RADIO_SVG}
+        ${hasSubSel ? '' : (catSelected ? RADIO_ON : RADIO_SVG)}
         <span style="flex:1;${catSelected?'font-weight:500':''}">${cat.label}</span>
         ${hasSubs ? `<button onclick="event.stopPropagation();toggleCatExpand('${cat.id}')"
                             style="background:none;border:none;cursor:pointer;padding:6px 14px 6px 6px;display:flex;align-items:center;flex-shrink:0;color:#121212">
@@ -1002,7 +1004,7 @@ function renderPanel(){
 
     if(isExpanded && hasSubs){
       for(const s of cat.subs.filter(s=>s!=='All')){
-        const subSelected = catSelected && panelState.selectedSubLabel===s;
+        const subSelected = isCatMatch && panelState.selectedSubLabel===s;
         rows += `
           <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
               style="display:flex;align-items:center;gap:8px;padding:0 18px 0 42px;cursor:pointer;font-size:13px;line-height:18px"
