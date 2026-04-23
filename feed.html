@@ -1001,7 +1001,7 @@ function renderPanel(){
       </li>`;
 
     if(isExpanded && hasSubs){
-      for(const s of cat.subs){
+      for(const s of cat.subs.filter(s=>s!=='All')){
         const subSelected = catSelected && panelState.selectedSubLabel===s;
         rows += `
           <li onclick="catSelect('${dept.id}','${cat.id}','${cat.label}','${s.replace(/'/g,"\\'")}')"
