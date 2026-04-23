@@ -933,21 +933,13 @@ function applyPanelMaxHeight(){
 }
 
 function positionPanel(btn){
-  if(_panelFixedTop !== null){
-    const panel = document.getElementById('cat-panel');
-    panel.style.top  = _panelFixedTop  + 'px';
-    panel.style.left = _panelFixedLeft + 'px';
-    applyPanelMaxHeight();
-    return;
-  }
   const rect = btn.getBoundingClientRect();
   const panel = document.getElementById('cat-panel');
   const top  = rect.bottom + 8;
-  const left = rect.left;
   const winW = window.innerWidth;
   const panW = 283;
   _panelFixedTop  = top;
-  _panelFixedLeft = Math.min(left, winW - panW - 16);
+  _panelFixedLeft = Math.min(rect.left, winW - panW - 16);
   panel.style.top  = _panelFixedTop  + 'px';
   panel.style.left = _panelFixedLeft + 'px';
   applyPanelMaxHeight();
@@ -961,6 +953,7 @@ const RADIO_ON     = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none
 
 function renderPanel(){
   const panel = document.getElementById('cat-panel');
+  if(panelState.anchorBtn) positionPanel(panelState.anchorBtn);
   const { deptId, expandedCatId } = panelState;
 
   if(!deptId){
