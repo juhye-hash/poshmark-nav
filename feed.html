@@ -935,7 +935,7 @@ function applyPanelMaxHeight(){
 function positionPanel(btn){
   const rect = btn.getBoundingClientRect();
   const panel = document.getElementById('cat-panel');
-  const top  = rect.bottom + 8;
+  const top  = rect.bottom + 10;
   const winW = window.innerWidth;
   const panW = 283;
   _panelFixedTop  = top;
@@ -1405,6 +1405,13 @@ document.addEventListener('click', e=>{
   if(path.includes(panel)) return;
   if(e.target.closest && e.target.closest('.filter-pill')) return;
   closeCatPanel();
+});
+
+/* ==================== RESIZE ==================== */
+window.addEventListener('resize', ()=>{
+  if(panelState.open && panelState.anchorBtn){
+    positionPanel(panelState.anchorBtn);
+  }
 });
 
 /* ==================== INIT ==================== */
